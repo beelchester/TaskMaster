@@ -18,15 +18,15 @@ import {theme} from '../theme';
 
 import { changePage } from '../features/pageSlice';
 import { useDispatch } from 'react-redux';
+import { useReducer } from 'react';
 
 const drawerWidth = 240;
 
 
 
 export default function LeftDrawer() {
-
   const dispatch = useDispatch();
-  const handleClick = (title:string) => {
+  const handleClickPage = (title:string) => {
     dispatch(changePage(title));
   }
   return (
@@ -71,7 +71,7 @@ export default function LeftDrawer() {
         <List sx={{marginTop:'2rem',marginBottom:'1rem'}}>
           {['Today', 'Upcoming'].map((text, index) => (
             <ListItem key={text} disablePadding>
-              <ListItemButton onClick={() => handleClick(text)}>
+              <ListItemButton onClick={() => handleClickPage(text)}>
                 <ListItemIcon>
                   {index % 2 === 0 ? <InboxIcon sx={{color:'primary.main'}}/> : <CalendarMonthIcon sx={{color:'primary.main'}} />}
                 </ListItemIcon>
@@ -87,7 +87,7 @@ export default function LeftDrawer() {
         <List>
           {['Inbox', 'Development', 'School'].map((text, index) => (
             <ListItem key={text} disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={() => handleClickPage(text)}>
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>

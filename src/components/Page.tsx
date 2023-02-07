@@ -11,7 +11,8 @@ import { useEffect, useState } from "react";
 import { theme } from "../theme";
 import TaskCard from "../common/TaskCard";
 import { motion } from "framer-motion";
-
+import { tasks } from "../../db";
+import { useSelector } from "react-redux";
 interface Todo {
   id: number;
   text: string;
@@ -21,17 +22,11 @@ interface Todo {
   project: string;
 }
 
-export default function Today() {
-  const [todos, setTodos] = useState([
-    { id: 1, text: "Finish project", completed: false, due: "Today", priority: "P1", project: "Inbox" },
-    { id: 2, text: "Go for a run", completed: false, due: "Tommorow", priority: "P2", project: "Development" },
-    { id: 3, text: "Buy groceries", completed: false, due: "Today", priority: "P2", project: "School" },
-    { id: 3, text: "Buy groceries", completed: false, due: "Today", priority: "P2", project: "School" },
-    { id: 3, text: "Buy groceries", completed: false, due: "Today", priority: "P2", project: "School" },
-    { id: 3, text: "Buy groceries", completed: false, due: "Today", priority: "P2", project: "School" },
-    { id: 3, text: "Buy groceries", completed: false, due: "Today", priority: "P2", project: "School" },
-    { id: 3, text: "Buy groceries", completed: false, due: "Today", priority: "P2", project: "School" },
-  ]);
+export default function Page() {
+  
+  const [todos, setTodos] = useState(tasks);
+
+  const page = useSelector((state: any) => state.page.currentPage);
 
   const toggleTodo = (id: any) => {
     setTodos(
@@ -69,6 +64,7 @@ className="Tbox"
 
     <motion.div
       className="box"
+      key={page}
       initial={{ opacity: 0, scale: 0.5, y: "0" }}
       animate={{ opacity: 1, scale: 1, y: "0" }}
       transition={{
@@ -79,16 +75,25 @@ className="Tbox"
     }
     >
         <Typography variant="h3" component="h3" sx={{marginTop:"4rem", marginBottom:'0.5rem'}} >
-          Today
+          {page}
         </Typography>
         </motion.div>
         </Box>
  
 
-        {todos.map((todo: Todo, index) => (
+        {page==='Today'?todos.filter(todo=>todo.due==="Today").map((todo: Todo, index) => (
+          
+          <TaskCard key={todo.id} todo={todo} index={index} toggleTodo={toggleTodo}/>
+        )):page==='Upcoming'?todos.map((todo: Todo, index) => (
+          
+          <TaskCard key={todo.id} todo={todo} index={index} toggleTodo={toggleTodo}/>
+        )):todos.filter(todo=>todo.project===page).map((todo: Todo, index) => (
           
           <TaskCard key={todo.id} todo={todo} index={index} toggleTodo={toggleTodo}/>
         ))}
+        
+        
+
       </Box>
     </ThemeProvider>
   );

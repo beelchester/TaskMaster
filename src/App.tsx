@@ -1,18 +1,19 @@
 import { useState } from 'react'
 import LeftDrawer from './components/LeftDrawer'
-import Today from './components/Today'
-import Upcoming from './components/Upcoming'
+import Page from './components/Page'
+
 import Box from '@mui/material/Box';
 import { useSelector } from 'react-redux';
 
 function App() {
-  const page = useSelector((state: any) => state.currentPage);
+  const page = useSelector((state: any) => state.page.currentPage);
   console.log(page)
   return (
     <Box sx={{display:'flex'}}>
       <LeftDrawer/>
-      {page === 'Today' ? <Today/> : <Upcoming/>
-      }
+      {/* {page === 'Today' || page === 'Upcoming' ? <Today/> : <Project/>} */}
+      <Page/>
+      
     </Box>
   )
 }
