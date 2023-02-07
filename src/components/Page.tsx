@@ -74,7 +74,7 @@ export default function Page() {
           return todo;
         })
       );
-    }, 300);
+    }, 400);
   
   };
   
