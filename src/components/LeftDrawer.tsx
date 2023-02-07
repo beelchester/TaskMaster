@@ -64,6 +64,7 @@ export default function LeftDrawer() {
           fontSize: '1.5rem',
           marginLeft: '1rem',
           marginTop: '2rem',
+          cursor: 'default'
       }}>  
           TaskMaster
         </Typography>
