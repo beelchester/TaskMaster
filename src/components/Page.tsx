@@ -144,7 +144,7 @@ export default function Page() {
                   color: "white",
                   bgcolor: "rgba(255, 255, 255, 0.05)",
                   height: "3rem",
-                  width: "8rem",
+                  width: "9rem",
                   marginRight: "4rem",
                   ".MuiSvgIcon-root ": {
                     fill: "white !important",
@@ -153,6 +153,7 @@ export default function Page() {
               >
                 <MenuItem value={1} sx={{color:'white'}}>By Priority</MenuItem>
                 <MenuItem value={2} sx={{color:'white'}}>By Due Date</MenuItem>
+                <MenuItem value={3} sx={{color:'white'}}>By Project</MenuItem>
               </Select>
               
             </Box>
@@ -166,6 +167,7 @@ export default function Page() {
                 onClick={toggleModal}
               >
                 <Add sx={{ fontSize: "30px" }} />
+
               </IconButton>
               <AddTask isVisible={isModalVisible} closeModal={toggleModal} />
             </Box>

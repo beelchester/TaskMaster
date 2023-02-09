@@ -55,18 +55,19 @@ zIndex: 200,
 border : '1px solid',
 borderColor: 'rgba(255, 255, 255, 0.1)',
 borderRadius: '10px',
+width : '50rem',
+height : '20rem',
 }}
 >
 <TextField
         label="Task Name"
         value={taskName}
         onChange={(e) => setTaskName(e.target.value)}
-        fullWidth
         margin="normal"
         inputProps={{ style: { color: 'white', } }}
         InputLabelProps={{ style: { color: 'white',outlineColor:'white'} }}
         variant="outlined"
-        sx={{"& .MuiOutlinedInput-notchedOutline":{borderColor: 'rgba(255,255,255,0.7)',},"& .MuiOutlinedInput-root:hover":{"& fieldset":{borderColor : 'white'}}} }
+        sx={{width:'100%',"& .MuiOutlinedInput-notchedOutline":{borderColor: 'rgba(255,255,255,0.7)',},"& .MuiOutlinedInput-root:hover":{"& fieldset":{borderColor : 'white'}}} }
         
       />
       <FormControl >
@@ -110,12 +111,12 @@ borderRadius: '10px',
         </Select>
       </FormControl>
 
-      <DatePicker  selected={dueDate} onChange={(date) => setDueDate(date)} />
+      <DatePicker  selected={dueDate} onChange={(date:Date) => setDueDate(date)} />
           
 <Button onClick={closeModal}>Cancel</Button>
+<Button  sx={{bgcolor:'secondary.main',color:'black',":hover":{bgcolor:"secondary.dark",}}}> Add Task </Button>
 </Box>
 </motion.div>
-
 
 </>
 )}

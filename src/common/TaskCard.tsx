@@ -1,4 +1,4 @@
-import { ListItem, Checkbox, ListItemText, Paper, Table, TableCell, TableRow, Box } from "@mui/material";
+import { ListItem, Checkbox, ListItemText, Paper, Box } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { theme } from "../theme";
@@ -74,9 +74,7 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted }) =
         <ListItemText primary={todo.project}  disableTypography sx={{fontWeight:'bold' }}/>
         </Box>}
       </ListItem>
-      
-  
- 
+
     </Paper>
 
   );

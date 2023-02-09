@@ -72,10 +72,10 @@ export default function LeftDrawer() {
         
         <List sx={{marginTop:'2rem',marginBottom:'1rem'}}>
           {['Today', 'Upcoming'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton onClick={() => handleClickPage(text)}>
+            <ListItem key={text} disablePadding sx={{paddingLeft:'0.4rem'}}>
+              <ListItemButton sx={{paddingLeft:'1rem',':hover':{bgcolor:'rgba(0, 0, 0, 0.08)'}}} onClick={() => handleClickPage(text)}>
                 <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon sx={{color:'primary.main'}}/> : <CalendarMonthIcon sx={{color:'primary.main'}} />}
+                  {index % 2 === 0 ? <InboxIcon sx={{color:'primary.main',}}/> : <CalendarMonthIcon sx={{color:'primary.main'}} />}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
@@ -89,7 +89,7 @@ export default function LeftDrawer() {
         <List>
           {['Inbox', 'Development', 'School'].map((text, index) => (
             <ListItem key={text} disablePadding sx={{marginLeft:'0.5rem'}}>
-              <ListItemButton onClick={() => handleClickPage(text)}>
+              <ListItemButton sx={{':hover':{bgcolor:'rgba(0, 0, 0, 0.08)'}}} onClick={() => handleClickPage(text)}>
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>
