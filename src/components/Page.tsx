@@ -12,6 +12,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  IconButton,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { theme } from "../theme";
@@ -19,7 +20,8 @@ import TaskCard from "../common/TaskCard";
 import { AnimatePresence, motion } from "framer-motion";
 import { tasks } from "../../db";
 import { useSelector } from "react-redux";
-import { ArrowDropDown } from "@mui/icons-material";
+import { Add, ArrowDropDown } from "@mui/icons-material";
+import AddTask from "../modal/AddTask";
 interface Todo {
   id: number;
   text: string;
@@ -27,28 +29,31 @@ interface Todo {
   due: string;
   priority: string;
   project: string;
-  checked: boolean; 
+  checked: boolean;
 }
 
 export default function Page() {
+  const [isModalVisible, setModalVisible] = useState(false);
 
-  
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   const [todos, setTodos] = useState(tasks);
 
   const page = useSelector((state: any) => state.page.currentPage);
   const [showCompleted, setShowCompleted] = useState(false);
-  const [showText, setShowText] = useState('Show Completed');
+  const [showText, setShowText] = useState("Show Completed");
   function handleClickCompleted() {
     setShowCompleted(!showCompleted);
-    setShowText(showCompleted?'Show Completed':'Show Uncompleted');
+    setShowText(showCompleted ? "Show Completed" : "Show Uncompleted");
   }
   useEffect(() => {
-    function changeCompleted () {
-      setShowCompleted(false)  
-      setShowText('Show Completed');
+    function changeCompleted() {
+      setShowCompleted(false);
+      setShowText("Show Completed");
     }
-    showCompleted && changeCompleted()
+    showCompleted && changeCompleted();
   }, [page]);
   const toggleTodo = (id: any) => {
     setTodos(
@@ -75,10 +80,9 @@ export default function Page() {
         })
       );
     }, 400);
-  
   };
-  
-  const [sort, setSort] = useState('');
+
+  const [sort, setSort] = useState("1");
   function handleSortChange(event: SelectChangeEvent) {
     setSort(event.target.value);
   }
@@ -104,15 +108,15 @@ export default function Page() {
             zIndex: 10,
             marginTop: "-2rem",
             display: "flex",
-           justifyContent: "space-between",
-           alignItems: "center",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
           <motion.div
             className="box"
             key={page}
-            initial={{ opacity: 0, scale: 0.5, y: "0" }}
-            animate={{ opacity: 1, scale: 1, y: "0" }}
+            initial={{ opacity: 0, scale: 0.5, x: "200", y: "10" }}
+            animate={{ opacity: 1, scale: 1, x: "0", y: "0" }}
             transition={{
               duration: 0.8,
               delay: 0.0,
@@ -127,22 +131,53 @@ export default function Page() {
               {page}
             </Typography>
           </motion.div>
-          <Box sx={{marginTop:'4rem'}}>
-          <Select onChange={handleSortChange}  value={sort}   sx={{color:'white',bgcolor:"rgba(255, 255, 255, 0.05)", width:'8rem','.MuiSvgIcon-root ': {
-              fill: "white !important",
-            }}}>
-      <MenuItem value={1}>By Priority</MenuItem>
-      <MenuItem value={2}>By Due Date</MenuItem>
-    </Select>
-      
- 
-          <Button onClick={()=>handleClickCompleted()}> {showText} </Button>
+          <Box sx={{ marginTop: "4rem",marginRight:'1.5rem', display:'flex',  justifyContent:'flex-end', alignItems:'center'}}>
+            <Box>
+            <Button onClick={() => handleClickCompleted()} sx={{marginX:'1.5rem'}}>
+                {" "}
+                {showText}{" "}
+              </Button>
+              <Select
+                onChange={handleSortChange}
+                value={sort}
+                sx={{
+                  color: "white",
+                  bgcolor: "rgba(255, 255, 255, 0.05)",
+                  height: "3rem",
+                  width: "8rem",
+                  marginRight: "4rem",
+                  ".MuiSvgIcon-root ": {
+                    fill: "white !important",
+                  },
+                }}
+              >
+                <MenuItem value={1} sx={{color:'white'}}>By Priority</MenuItem>
+                <MenuItem value={2} sx={{color:'white'}}>By Due Date</MenuItem>
+              </Select>
+              
+            </Box>
+            <Box>
+              <IconButton
+                size="large"
+                sx={{
+                  bgcolor: "secondary.main",
+                  ":hover": { bgcolor: "secondary.dark" },
+                }}
+                onClick={toggleModal}
+              >
+                <Add sx={{ fontSize: "30px" }} />
+              </IconButton>
+              <AddTask isVisible={isModalVisible} closeModal={toggleModal} />
+            </Box>
           </Box>
         </Box>
 
         {page === "Today"
           ? todos
-              .filter((todo) => todo.due === "Today"&&todo.completed===showCompleted)
+              .filter(
+                (todo) =>
+                  todo.due === "Today" && todo.completed === showCompleted
+              )
               .map((todo: Todo, index) => (
                 <TaskCard
                   key={todo.id}
@@ -153,8 +188,9 @@ export default function Page() {
                 />
               ))
           : page === "Upcoming"
-          ? todos.filter((todo) => todo.completed===showCompleted).map((todo: Todo, index) => (
-            
+          ? todos
+              .filter((todo) => todo.completed === showCompleted)
+              .map((todo: Todo, index) => (
                 <TaskCard
                   key={todo.id}
                   todo={todo}
@@ -162,10 +198,12 @@ export default function Page() {
                   toggleTodo={toggleTodo}
                   showCompleted={showCompleted}
                 />
-         
-            ))
+              ))
           : todos
-              .filter((todo) => todo.project === page && todo.completed===showCompleted)
+              .filter(
+                (todo) =>
+                  todo.project === page && todo.completed === showCompleted
+              )
               .map((todo: Todo, index) => (
                 <TaskCard
                   key={todo.id}

@@ -52,6 +52,7 @@ export default function LeftDrawer() {
             boxSizing: 'border-box',
             bgcolor: 'background.paper',
             color: 'primary.main',
+            zIndex: 10,
           },
         }}
         variant="permanent"
@@ -87,7 +88,7 @@ export default function LeftDrawer() {
         </Typography>
         <List>
           {['Inbox', 'Development', 'School'].map((text, index) => (
-            <ListItem key={text} disablePadding>
+            <ListItem key={text} disablePadding sx={{marginLeft:'0.5rem'}}>
               <ListItemButton onClick={() => handleClickPage(text)}>
                 <ListItemText primary={text} />
               </ListItemButton>

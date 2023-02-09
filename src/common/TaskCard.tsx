@@ -55,13 +55,23 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted }) =
         <ListItemText primary={todo.text} disableTypography sx={{fontSize:'1.1rem'}} />
         </Box>
         {page!=='Today'&&<Box sx={{ width:"40%" }}>
-        <ListItemText primary={todo.due} disableTypography />
+        <ListItemText primary={todo.due} disableTypography sx={{color:todo.due==='Today'?'secondary.main':'rgba(255, 255, 255, 1)'}} />
         </Box>}
         <Box sx={{ width:"40%" }}>
-        <ListItemText primary={todo.priority} disableTypography/>
+        <ListItemText primary={todo.priority} disableTypography sx={
+{
+  fontWeight: 'bold',
+  fontSize: '1.04rem',
+  color:
+  todo.priority === 'P1' ? 'rgba(255, 207, 0, 1)' :
+  todo.priority === 'P2' ? 'rgba(102, 150, 255, 1)' :
+  todo.priority === 'P3' ? 'rgba(255, 102, 204, 1)' :
+         'rgba(255, 255, 255, 1)'
+}
+}/>
         </Box>
         {(page==='Today'||page==='Upcoming')&&<Box sx={{ width:"40%" }}>
-        <ListItemText primary={todo.project}  disableTypography/>
+        <ListItemText primary={todo.project}  disableTypography sx={{fontWeight:'bold' }}/>
         </Box>}
       </ListItem>
       

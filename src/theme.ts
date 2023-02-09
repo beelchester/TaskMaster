@@ -11,9 +11,11 @@ export  const theme = createTheme({
     },
     secondary: {
       // main: '#bb86fc'
-      main: '#33c6dd'
+      main: '#33c6dd',
+      dark : 'rgba(50, 198, 220, 0.93)'
     },
   },
-  
+ 
+
 });
 
