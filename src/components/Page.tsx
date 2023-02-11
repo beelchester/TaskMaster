@@ -18,15 +18,14 @@ import { useEffect, useState } from "react";
 import { theme } from "../theme";
 import TaskCard from "../common/TaskCard";
 import { AnimatePresence, motion } from "framer-motion";
-import { tasks } from "../../db";
 import { useSelector } from "react-redux";
 import { Add, ArrowDropDown } from "@mui/icons-material";
 import AddTask from "../modal/AddTask";
 interface Todo {
-  id: number;
+  id: string;
   text: string;
   completed: boolean;
-  due: string;
+  due: Date ;
   priority: string;
   project: string;
   checked: boolean;
@@ -39,7 +38,12 @@ export default function Page() {
     setModalVisible(!isModalVisible);
   };
 
+  const tasks: Todo[] = useSelector((state: any) => state.tasks.tasks);
   const [todos, setTodos] = useState(tasks);
+  useEffect(() => {
+    setTodos(tasks);
+    console.log(tasks)
+  }, [tasks])
 
   const page = useSelector((state: any) => state.page.currentPage);
   const [showCompleted, setShowCompleted] = useState(false);
@@ -48,13 +52,6 @@ export default function Page() {
     setShowCompleted(!showCompleted);
     setShowText(showCompleted ? "Show Completed" : "Show Uncompleted");
   }
-  useEffect(() => {
-    function changeCompleted() {
-      setShowCompleted(false);
-      setShowText("Show Completed");
-    }
-    showCompleted && changeCompleted();
-  }, [page]);
   const toggleTodo = (id: any) => {
     setTodos(
       todos.map((todo) => {
@@ -87,6 +84,19 @@ export default function Page() {
     setSort(event.target.value);
   }
 
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  function editClickHandler() {
+    setEditModalVisible(true);
+  }
+const toggleEditModal = () => {
+  setEditModalVisible(!editModalVisible);
+};
+const [editTodo, setEditTodo] = useState<Todo>()
+const taskClickHandler = (todo: Todo) => {
+  setEditTodo(todo)
+  setEditModalVisible(true);
+  // setModalVisible(true);
+};
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -169,16 +179,16 @@ export default function Page() {
                 <Add sx={{ fontSize: "30px" }} />
 
               </IconButton>
-              <AddTask isVisible={isModalVisible} closeModal={toggleModal} />
+              {editModalVisible?<AddTask isVisible={editModalVisible} closeModal={toggleEditModal} mode='edit' toEditTask={editTodo}/>:<AddTask isVisible={isModalVisible} closeModal={toggleModal} />}
             </Box>
           </Box>
         </Box>
-
+        
         {page === "Today"
           ? todos
               .filter(
                 (todo) =>
-                  todo.due === "Today" && todo.completed === showCompleted
+                  new Date(todo.due).getDate() === new Date().getDate() && todo.completed === showCompleted
               )
               .map((todo: Todo, index) => (
                 <TaskCard
@@ -187,6 +197,10 @@ export default function Page() {
                   index={index}
                   toggleTodo={toggleTodo}
                   showCompleted={showCompleted}
+                  isVisible={isModalVisible} 
+                  closeModal={toggleModal}
+                  taskClickHandler={taskClickHandler}
+                
                 />
               ))
           : page === "Upcoming"
@@ -199,7 +213,11 @@ export default function Page() {
                   index={index}
                   toggleTodo={toggleTodo}
                   showCompleted={showCompleted}
+                  isVisible={isModalVisible} 
+                  closeModal={toggleModal}
+                  taskClickHandler={taskClickHandler}
                 />
+
               ))
           : todos
               .filter(
@@ -213,8 +231,13 @@ export default function Page() {
                   index={index}
                   toggleTodo={toggleTodo}
                   showCompleted={showCompleted}
+                  isVisible={isModalVisible} 
+                  closeModal={toggleModal}
+                  taskClickHandler={taskClickHandler}
                 />
+                // console.log(todo)
               ))}
+            
       </Box>
     </ThemeProvider>
   );

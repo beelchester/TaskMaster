@@ -1,13 +1,14 @@
 import { ListItem, Checkbox, ListItemText, Paper, Box } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import AddTask from "../modal/AddTask";
 import { theme } from "../theme";
 
 interface Todo {
-  id: number;
+  id: string;
   text: string;
   completed: boolean;
-  due: string;
+  due: Date;
   priority: string;
   project: string;
   checked: boolean; 
@@ -19,21 +20,36 @@ interface props {
   toggleTodo: (id: any) => void;
   index : number;
   showCompleted: boolean;
+  isVisible: boolean;
+  closeModal: () => void;
+  taskClickHandler: (todo:Todo) => void;
 }
 
-const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted }) => {
+const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted,closeModal,isVisible, taskClickHandler }) => {
  
   const page = useSelector((state: any) => state.page.currentPage);
   const [elevation, setElevation] = useState(3);
   console.log(todo.checked, todo.completed);
 
+  function dateFormatter(date: Date) {
+    let dateStr = date.toDateString().substring(0, date.toDateString().length - 5);
+    let day = dateStr.slice(0, 3);
+    let rest = dateStr.slice(3);
+    return day + ", " + rest;
+  }
+
+  
+
   return (
+
+    
     <Paper
     elevation={elevation}
     onMouseEnter={() => setElevation(6)}
     onMouseLeave={() => setElevation(3)}
-      sx={{ margin: "1rem", padding: "1rem", color: "primary.main",cursor:'pointer', marginTop:index===0?'8rem':'0' }}
+      sx={{ margin: "1rem", padding: "1rem", color: "primary.main", marginTop:index===0?'8rem':'0' }}
     >
+    <div onClick={()=>taskClickHandler(todo)} style={{cursor:'pointer',}}>
 
       <ListItem
         key={todo.id}
@@ -44,18 +60,23 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted }) =
           fontWeight:'bold',
         }}
       >
+        <div onClick={(e) => {
+      toggleTodo(todo.id);
+      e.stopPropagation();
+    }}>
         <Checkbox
           // checked={todo.checked || todo.completed}
           checked = {showCompleted?!todo.checked:todo.checked}
-          onClick={() => toggleTodo(todo.id)}
           sx={{ color: "secondary.main" }}
           color="secondary"
         />
+        </div>
         <Box sx={{ width:"40%" }}>
         <ListItemText primary={todo.text} disableTypography sx={{fontSize:'1.1rem'}} />
         </Box>
         {page!=='Today'&&<Box sx={{ width:"40%" }}>
-        <ListItemText primary={todo.due} disableTypography sx={{color:todo.due==='Today'?'secondary.main':'rgba(255, 255, 255, 1)'}} />
+          
+        <ListItemText primary={dateFormatter(new Date(todo.due))} disableTypography sx={{color:todo.due===new Date()?'secondary.main':'rgba(255, 255, 255, 1)'}} />
         </Box>}
         <Box sx={{ width:"40%" }}>
         <ListItemText primary={todo.priority} disableTypography sx={
@@ -75,8 +96,8 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted }) =
         </Box>}
       </ListItem>
 
+    </div>
     </Paper>
-
   );
 };
 
