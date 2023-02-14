@@ -48,7 +48,6 @@ const Modal: React.FC<props> = ({
       setDueDate(new Date(toEditTask.due));
       setId(toEditTask.id);
     }
-    console.log(taskName);
   }, [toEditTask]);
 
   const task = {
@@ -69,6 +68,8 @@ const Modal: React.FC<props> = ({
   const Title = mode === "edit" ? "Edit Task" : "Add Task";
 
   const dispatch = useDispatch();
+
+
 
   function submitTask() {
     if (mode === "edit") {
@@ -222,7 +223,7 @@ const Modal: React.FC<props> = ({
                         onChange={(e) => setPriority(e.target.value)}
                         label="Priority"
                         sx={{
-                          color: "white",
+                          color: priority === "P1"? "rgba(255, 207, 0, 1) ": priority === "P2"? "rgba(102, 150, 255, 1) ": priority === "P3"? "rgba(255, 102, 204, 1) ": "white",
                           "& fieldset": {
                             borderColor: "rgba(255,255,255,0.7)",
                           },
@@ -234,7 +235,9 @@ const Modal: React.FC<props> = ({
                           ".MuiSvgIcon-root ": {
                             fill: "white !important",
                           },
-                        }}
+                      
+                        }
+                      }
                       >
                         {priorities.map((p) => (
                           <MenuItem sx={{ color: "white" }} key={p} value={p}>
@@ -278,6 +281,7 @@ const Modal: React.FC<props> = ({
                   <DatePicker
                     selected={dueDate}
                     onChange={(date: Date) => setDueDate(date)}
+
                   />
 
                   <Box

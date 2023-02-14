@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 
 function App() {
   const page = useSelector((state: any) => state.page.currentPage);
-  console.log(page)
   return (
     <Box sx={{display:'flex'}}>
       <LeftDrawer/>

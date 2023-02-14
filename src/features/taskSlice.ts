@@ -25,13 +25,12 @@ const taskSlice = createSlice({
   reducers: {
     addTask: (state, action: PayloadAction<Todo>) => {
       state.tasks.push(action.payload);
-      console.log('pushed', action.payload)
     },
     editTask: (state, action: PayloadAction<Todo>) => {
       const taskIndex = state.tasks.findIndex(task => task.id === action.payload.id);
       state.tasks[taskIndex] = action.payload;
     },
-    deleteTask: (state, action: PayloadAction<number>) => {
+    deleteTask: (state, action: PayloadAction<string>) => {
       state.tasks = state.tasks.filter(task => task.id !== action.payload);
     },
   }

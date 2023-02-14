@@ -29,7 +29,6 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted,clos
  
   const page = useSelector((state: any) => state.page.currentPage);
   const [elevation, setElevation] = useState(3);
-  console.log(todo.checked, todo.completed);
 
   function dateFormatter(date: Date) {
     let dateStr = date.toDateString().substring(0, date.toDateString().length - 5);
@@ -38,18 +37,18 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted,clos
     return day + ", " + rest;
   }
 
-  
+ console.log(new Date(todo.due).toDateString(), new Date()) 
 
   return (
 
-    
+    <div onClick={()=>taskClickHandler(todo)} style={{cursor:'pointer',}}>
     <Paper
     elevation={elevation}
     onMouseEnter={() => setElevation(6)}
     onMouseLeave={() => setElevation(3)}
       sx={{ margin: "1rem", padding: "1rem", color: "primary.main", marginTop:index===0?'8rem':'0' }}
     >
-    <div onClick={()=>taskClickHandler(todo)} style={{cursor:'pointer',}}>
+    
 
       <ListItem
         key={todo.id}
@@ -76,7 +75,7 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted,clos
         </Box>
         {page!=='Today'&&<Box sx={{ width:"40%" }}>
           
-        <ListItemText primary={dateFormatter(new Date(todo.due))} disableTypography sx={{color:todo.due===new Date()?'secondary.main':'rgba(255, 255, 255, 1)'}} />
+        <ListItemText primary={new Date(todo.due).getDate()===new Date().getDate()?"Today":new Date(todo.due).getDate()-new Date().getDate()===-1?"Yesterday":new Date(todo.due).getDate()-new Date().getDate()===1?"Tomorrow":dateFormatter(new Date(todo.due))} disableTypography sx={{color:new Date(todo.due).getDate()===new Date().getDate()?'secondary.main':'rgba(255, 255, 255, 1)'}} />
         </Box>}
         <Box sx={{ width:"40%" }}>
         <ListItemText primary={todo.priority} disableTypography sx={
@@ -96,8 +95,9 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted,clos
         </Box>}
       </ListItem>
 
-    </div>
+
     </Paper>
+    </div>
   );
 };
 

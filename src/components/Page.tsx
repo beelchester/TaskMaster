@@ -42,7 +42,6 @@ export default function Page() {
   const [todos, setTodos] = useState(tasks);
   useEffect(() => {
     setTodos(tasks);
-    console.log(tasks)
   }, [tasks])
 
   const page = useSelector((state: any) => state.page.currentPage);
@@ -235,7 +234,6 @@ const taskClickHandler = (todo: Todo) => {
                   closeModal={toggleModal}
                   taskClickHandler={taskClickHandler}
                 />
-                // console.log(todo)
               ))}
             
       </Box>
