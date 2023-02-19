@@ -1,10 +1,15 @@
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { ListItem, Checkbox, ListItemText, Paper, Box } from "@mui/material";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProject } from "../features/projectSlice";
+import { initialTasks } from "../features/taskSlice";
+import { fetchUserFailure, fetchUserStart, fetchUserSuccess } from "../features/userSlice";
 import AddTask from "../modal/AddTask";
 import { theme } from "../theme";
 
 interface Todo {
+  _typename: string;
   id: string;
   text: string;
   completed: boolean;
@@ -36,8 +41,143 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted,clos
     let rest = dateStr.slice(3);
     return day + ", " + rest;
   }
+  const dispatch = useDispatch();
 
- console.log(new Date(todo.due).toDateString(), new Date()) 
+  const todoWithoutTypename = {
+  id : todo.id,
+  text : todo.text,
+  completed : !todo.completed,
+  due : todo.due,
+  priority : todo.priority,
+  project : todo.project,
+  checked : todo.checked
+  
+  }
+  // useEffect (() => {
+  //   // const { _typename, ...todoWithoutTypename } = todo;
+  //   console.log(todo)
+
+  //   console.log(todoWithoutTypename)
+  //   setTimeout(() => {
+      
+  //     handleUpdateTask(todoWithoutTypename);
+  //   }, 450);
+  // }, [todo.checked])
+
+  const GET_USER = gql`
+  query Query($email: String!) {
+  getUser(email: $email) {
+    email
+    projects {
+      projectName
+      tasks {
+        id
+        text
+        completed
+        due
+        priority
+        project
+        checked
+      }
+    }
+  },
+  getTasks(email: $email) {
+    id
+    text
+    completed
+    due
+    priority
+    project
+    checked
+}}
+`;
+
+const user = useQuery(GET_USER, {
+  variables: { email: "sahil@sahil.com" },
+});
+const fetchUser = () => {
+      
+  if (user.loading) {
+    dispatch(fetchUserStart());
+    
+  }
+  if (user.error) {
+    dispatch(fetchUserFailure(user.error));
+  }
+  if (user.data) {
+    dispatch(fetchUserSuccess(user.data.getUser));
+    dispatch(fetchProject(user.data.getUser.projects));
+    dispatch(initialTasks(user.data.getTasks));
+  }
+}
+const CREATE_TASK = gql`
+  mutation Mutation($email: String!, $projectName: String!, $task: TaskInput!) {
+    createTask(email: $email, projectName: $projectName, task: $task) {
+      id
+      text
+      completed
+      due
+      priority
+      project
+      checked
+    }
+    
+  }
+`;
+
+
+const [createTask] = useMutation(CREATE_TASK);
+const handleCreateTask = (task:any) => {
+createTask({
+  variables: {
+    email: 'sahil@sahil.com',
+    projectName: 'Inbox',
+    task
+  },
+  refetchQueries: [{ query: GET_USER, variables: { email: 'sahil@sahil.com' } }],
+}).then(()=>{
+  fetchUser()
+})
+}
+
+const UPDATE_TASK = gql`
+  mutation Mutation($email: String!, $projectName: String!, $taskId: ID!, $updatedTask: TaskInput!) {
+    updateTask(email: $email, projectName: $projectName, taskId: $taskId, updatedTask: $updatedTask) {
+      id
+      text
+      completed
+      due
+      priority
+      project
+      checked
+    }
+  }`
+
+const [updateTask] = useMutation(UPDATE_TASK);
+
+const handleUpdateTask = (task: any) => {
+  console.log(task)
+
+  updateTask({
+    variables: {
+      email: 'sahil@sahil.com',
+      projectName: 'Inbox',
+      taskId: task.id,
+      updatedTask: task
+    },
+    refetchQueries: [{ query: GET_USER, variables: { email: 'sahil@sahil.com' } }],
+  }).then(() => {
+    fetchUser();
+  });
+};
+
+function handleCheckboxClick(e: any) {
+  e.stopPropagation();
+  toggleTodo(todo.id);
+  setTimeout(() => {
+    handleUpdateTask(todoWithoutTypename);
+  }, 400);
+}
 
   return (
 
@@ -60,8 +200,7 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted,clos
         }}
       >
         <div onClick={(e) => {
-      toggleTodo(todo.id);
-      e.stopPropagation();
+     handleCheckboxClick(e)
     }}>
         <Checkbox
           // checked={todo.checked || todo.completed}

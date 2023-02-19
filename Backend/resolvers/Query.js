@@ -9,5 +9,15 @@ getUser: async (parent, { email }, { User }) => {
 getProjects : async (parent, { email }, { User }) => {
 const user = await User.findOne({ email })
 return user.projects
+},
+getTasks : async (parent, { email }, { User }) => {
+const user = await User.findOne({ email })
+const projects = user.projects
+let tasks = []
+projects.forEach(project => {
+  tasks = tasks.concat(project.tasks) 
+})
+return tasks
 }
+
 }

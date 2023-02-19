@@ -44,6 +44,8 @@ export default function Page() {
     setTodos(tasks);
   }, [tasks])
 
+  console.log(todos)
+
   const page = useSelector((state: any) => state.page.currentPage);
   const [showCompleted, setShowCompleted] = useState(false);
   const [showText, setShowText] = useState("Show Completed");
@@ -63,19 +65,6 @@ export default function Page() {
         return todo;
       })
     );
-    setTimeout(() => {
-      setTodos(
-        todos.map((todo) => {
-          if (todo.id === id) {
-            return {
-              ...todo,
-              completed: !todo.completed,
-            };
-          }
-          return todo;
-        })
-      );
-    }, 400);
   };
 
   const [sort, setSort] = useState("1");
@@ -183,7 +172,7 @@ const taskClickHandler = (todo: Todo) => {
           </Box>
         </Box>
         
-        {page === "Today"
+        {todos !== undefined && page === "Today"
           ? todos
               .filter(
                 (todo) =>
@@ -202,7 +191,7 @@ const taskClickHandler = (todo: Todo) => {
                 
                 />
               ))
-          : page === "Upcoming"
+          : todos !== undefined && page === "Upcoming"
           ? todos
               .filter((todo) => todo.completed === showCompleted)
               .map((todo: Todo, index) => (
@@ -218,7 +207,7 @@ const taskClickHandler = (todo: Todo) => {
                 />
 
               ))
-          : todos
+          : todos !== undefined && todos
               .filter(
                 (todo) =>
                   todo.project === page && todo.completed === showCompleted

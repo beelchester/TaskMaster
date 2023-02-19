@@ -17,7 +17,7 @@ import {  ThemeProvider } from '@mui/material';
 import {theme} from '../theme';
 
 import { changePage } from '../features/pageSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useReducer } from 'react';
 
 const drawerWidth = 240;
@@ -29,6 +29,9 @@ export default function LeftDrawer() {
   const handleClickPage = (title:string) => {
     dispatch(changePage(title));
   }
+  const projects = useSelector((state: any) => state.projects.projects);
+
+  // console.log(projects)
   return (
     <ThemeProvider theme={theme}>
    
@@ -87,10 +90,10 @@ export default function LeftDrawer() {
           Projects
         </Typography>
         <List>
-          {['Inbox', 'Development', 'School'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{marginLeft:'0.5rem'}}>
-              <ListItemButton sx={{':hover':{bgcolor:'rgba(0, 0, 0, 0.08)'}}} onClick={() => handleClickPage(text)}>
-                <ListItemText primary={text} />
+          {projects.map((project : any) => (
+            <ListItem key={project.projectName} disablePadding sx={{marginLeft:'0.5rem'}}>
+              <ListItemButton sx={{':hover':{bgcolor:'rgba(0, 0, 0, 0.08)'}}} onClick={() => handleClickPage(project.projectName)}>
+                <ListItemText primary={project.projectName} />
               </ListItemButton>
             </ListItem>
           ))}

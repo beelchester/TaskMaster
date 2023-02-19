@@ -10,7 +10,7 @@ interface Todo {
 
 type tasks = Todo[];
 
-let date:Date | string = new Date().toISOString()
+let date:Date | string = new Date().toISOString() // 2021-03-01T00:00:00.000Z
 
 export const tasks: tasks = [
   { "id": "1", "text": "Finish project", "completed": true, "due":date, "priority": "P1", "project": "Inbox", "checked": false},

@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { tasks } from '../../db';
 
 interface Todo {
   id: string;
@@ -16,7 +15,7 @@ interface TaskState {
 }
 
 const initialState: TaskState = {
-  tasks
+  tasks : []
 };
 
 const taskSlice = createSlice({
@@ -33,9 +32,12 @@ const taskSlice = createSlice({
     deleteTask: (state, action: PayloadAction<string>) => {
       state.tasks = state.tasks.filter(task => task.id !== action.payload);
     },
+    initialTasks : (state, action) => {
+      state.tasks = action.payload;
+    }
   }
 });
 
-export const { addTask, editTask, deleteTask } = taskSlice.actions;
+export const { addTask, editTask, deleteTask, initialTasks } = taskSlice.actions;
 
 export default taskSlice.reducer;

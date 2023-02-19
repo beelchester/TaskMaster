@@ -16,8 +16,11 @@ import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch, useSelector } from "react-redux";
-import { addTask, editTask, deleteTask } from "../features/taskSlice";
+import { addTask, editTask, deleteTask, initialTasks } from "../features/taskSlice";
 import { v4 as uuidv4 } from "uuid";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { fetchProject } from "../features/projectSlice";
+import { fetchUserStart, fetchUserFailure, fetchUserSuccess } from "../features/userSlice";
 interface props {
   isVisible: boolean;
   closeModal: () => void;
@@ -31,13 +34,13 @@ const Modal: React.FC<props> = ({
   mode,
   toEditTask,
 }) => {
-  const newId: string = uuidv4();
+
 
   const [taskName, setTaskName] = useState("");
   const [priority, setPriority] = useState("P1");
   const [project, setProject] = useState("School");
   const [dueDate, setDueDate] = useState<Date>(new Date());
-  const [id, setId] = useState(newId);
+  const [id, setId] = useState("");
   const tasks = useSelector((state: any) => state.tasks.tasks);
 
   useEffect(() => {
@@ -63,26 +66,164 @@ const Modal: React.FC<props> = ({
   
 
   const priorities = ["P1", "P2", "P3"];
-  const projects = ["School", "Project 2", "Project 3"];
+  const projects = ["Inbox","School", "Project 2", "Project 3"];
 
   const Title = mode === "edit" ? "Edit Task" : "Add Task";
 
   const dispatch = useDispatch();
 
+  const GET_USER = gql`
+  query Query($email: String!) {
+  getUser(email: $email) {
+    email
+    projects {
+      projectName
+      tasks {
+        id
+        text
+        completed
+        due
+        priority
+        project
+        checked
+      }
+    }
+  },
+  getTasks(email: $email) {
+    id
+    text
+    completed
+    due
+    priority
+    project
+    checked
+}}
+`;
+
+const user = useQuery(GET_USER, {
+  variables: { email: "sahil@sahil.com" },
+});
+const fetchUser = () => {
+      
+  if (user.loading) {
+    dispatch(fetchUserStart());
+    
+  }
+  if (user.error) {
+    dispatch(fetchUserFailure(user.error));
+  }
+  if (user.data) {
+    dispatch(fetchUserSuccess(user.data.getUser));
+    dispatch(fetchProject(user.data.getUser.projects));
+    dispatch(initialTasks(user.data.getTasks));
+  }
+}
+const CREATE_TASK = gql`
+  mutation Mutation($email: String!, $projectName: String!, $task: TaskInput!) {
+    createTask(email: $email, projectName: $projectName, task: $task) {
+      id
+      text
+      completed
+      due
+      priority
+      project
+      checked
+    }
+    
+  }
+`;
+
+
+const [createTask] = useMutation(CREATE_TASK);
+const handleCreateTask = (task:any) => {
+createTask({
+  variables: {
+    email: 'sahil@sahil.com',
+    projectName: 'Inbox',
+    task
+  },
+  refetchQueries: [{ query: GET_USER, variables: { email: 'sahil@sahil.com' } }],
+}).then(()=>{
+  fetchUser()
+})
+}
+
+const UPDATE_TASK = gql`
+  mutation Mutation($email: String!, $projectName: String!, $taskId: ID!, $updatedTask: TaskInput!) {
+    updateTask(email: $email, projectName: $projectName, taskId: $taskId, updatedTask: $updatedTask) {
+      id
+      text
+      completed
+      due
+      priority
+      project
+      checked
+    }
+  }`
+
+const [updateTask] = useMutation(UPDATE_TASK);
+
+const handleUpdateTask = (task: any) => {
+  console.log(task)
+
+  updateTask({
+    variables: {
+      email: 'sahil@sahil.com',
+      projectName: 'Inbox',
+      taskId: task.id,
+      updatedTask: task
+    },
+    refetchQueries: [{ query: GET_USER, variables: { email: 'sahil@sahil.com' } }],
+  }).then(() => {
+    fetchUser();
+  });
+};
+
+const DELETE_TASK = gql`
+  mutation Mutation($email: String!, $projectName: String!, $taskId: ID!) {
+    deleteTask(email: $email, projectName: $projectName, taskId: $taskId) {
+      id
+      text
+      completed
+      due
+      priority
+      project
+      checked
+    }
+  }`
+
+const [deleteTask] = useMutation(DELETE_TASK);
+
+const handleDeleteTask = (task: any) => {
+  console.log(task.id)
+  deleteTask({
+    variables: {
+      email: 'sahil@sahil.com',
+      projectName: 'Inbox',
+      taskId: task.id,
+    },
+    refetchQueries: [{ query: GET_USER, variables: { email: 'sahil@sahil.com' } }],
+  }).then(() => {
+    fetchUser();
+  });
+};
+
 
 
   function submitTask() {
     if (mode === "edit") {
-      dispatch(editTask(task));
+      // dispatch(editTask(task));
+      handleUpdateTask(task)
       closeModal();
       return;
     }
     if (taskName.trim().length === 0) return;
-    dispatch(addTask(task));
+    // dispatch(addTask(task));
+    handleCreateTask(task)
     closeModal();
     setTaskName("");
     setPriority("P1");
-    setProject("School");
+    setProject("Inbox");
     setDueDate(new Date());
   }
 
@@ -95,7 +236,8 @@ const Modal: React.FC<props> = ({
   }
 
   function deleteHandler() {
-    dispatch(deleteTask(toEditTask.id));
+    // dispatch(deleteTask(toEditTask.id));
+    handleDeleteTask(toEditTask)
     closeModal();
     setShowDeleteConfirm(false);
   }
