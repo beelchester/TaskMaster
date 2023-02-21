@@ -53,16 +53,7 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted,clos
   checked : todo.checked
   
   }
-  // useEffect (() => {
-  //   // const { _typename, ...todoWithoutTypename } = todo;
-  //   console.log(todo)
 
-  //   console.log(todoWithoutTypename)
-  //   setTimeout(() => {
-      
-  //     handleUpdateTask(todoWithoutTypename);
-  //   }, 450);
-  // }, [todo.checked])
 
   const GET_USER = gql`
   query Query($email: String!) {
@@ -126,19 +117,7 @@ const CREATE_TASK = gql`
 `;
 
 
-const [createTask] = useMutation(CREATE_TASK);
-const handleCreateTask = (task:any) => {
-createTask({
-  variables: {
-    email: 'sahil@sahil.com',
-    projectName: 'Inbox',
-    task
-  },
-  refetchQueries: [{ query: GET_USER, variables: { email: 'sahil@sahil.com' } }],
-}).then(()=>{
-  fetchUser()
-})
-}
+
 
 const UPDATE_TASK = gql`
   mutation Mutation($email: String!, $projectName: String!, $taskId: ID!, $updatedTask: TaskInput!) {
@@ -214,7 +193,7 @@ function handleCheckboxClick(e: any) {
         </Box>
         {page!=='Today'&&<Box sx={{ width:"40%" }}>
           
-        <ListItemText primary={new Date(todo.due).getDate()===new Date().getDate()?"Today":new Date(todo.due).getDate()-new Date().getDate()===-1?"Yesterday":new Date(todo.due).getDate()-new Date().getDate()===1?"Tomorrow":dateFormatter(new Date(todo.due))} disableTypography sx={{color:new Date(todo.due).getDate()===new Date().getDate()?'secondary.main':'rgba(255, 255, 255, 1)'}} />
+        <ListItemText primary={new Date(todo.due).getDate()===new Date().getDate()?"Today":new Date(todo.due).getDate()-new Date().getDate()===-1?"Yesterday":new Date(todo.due).getDate()-new Date().getDate()===1?"Tomorrow":dateFormatter(new Date(todo.due))} disableTypography sx={{color:new Date(todo.due).getDate()===new Date().getDate()?'secondary.main':new Date(todo.due).getDate()-new Date().getDate()===-1?'rgba(255, 41, 55, 1)':'rgba(255, 255, 255, 1)'}} />
         </Box>}
         <Box sx={{ width:"40%" }}>
         <ListItemText primary={todo.priority} disableTypography sx={

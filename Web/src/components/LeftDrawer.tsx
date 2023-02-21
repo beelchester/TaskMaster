@@ -13,12 +13,14 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import {  ThemeProvider } from '@mui/material';
+import {  Button, ThemeProvider } from '@mui/material';
 import {theme} from '../theme';
 
 import { changePage } from '../features/pageSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useReducer } from 'react';
+import { useReducer, useState } from 'react';
+import AddTask from '../modal/AddTask';
+import AddProject from '../modal/AddProject';
 
 const drawerWidth = 240;
 
@@ -30,7 +32,14 @@ export default function LeftDrawer() {
     dispatch(changePage(title));
   }
   const projects = useSelector((state: any) => state.projects.projects);
+  const [addProject, setAddProject] = useState(false);
 
+  // const[zIndex, setZIndex] = useState(false);
+
+  function closeModal(){
+    setAddProject(!addProject);
+    // setZIndex(false);
+  }
   // console.log(projects)
   return (
     <ThemeProvider theme={theme}>
@@ -55,7 +64,8 @@ export default function LeftDrawer() {
             boxSizing: 'border-box',
             bgcolor: 'background.paper',
             color: 'primary.main',
-            zIndex: 10,
+            
+            zIndex: addProject ? 20 : 0,
           },
         }}
         variant="permanent"
@@ -98,6 +108,10 @@ export default function LeftDrawer() {
             </ListItem>
           ))}
         </List>
+        <Button onClick={()=>setAddProject(true)}>Add Project</Button>
+        <AddProject isVisible={addProject} closeModal={closeModal}/>
+       {/* <AddTask isVisible={addProject} mode="project" closeModal={closeModal}/> */}
+
       </Drawer>
      
     </ThemeProvider>

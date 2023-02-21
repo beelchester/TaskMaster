@@ -44,7 +44,6 @@ export default function Page() {
     setTodos(tasks);
   }, [tasks])
 
-  console.log(todos)
 
   const page = useSelector((state: any) => state.page.currentPage);
   const [showCompleted, setShowCompleted] = useState(false);
