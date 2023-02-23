@@ -112,12 +112,12 @@ const taskClickHandler = (todo: Todo) => {
           <motion.div
             className="box"
             key={page}
-            initial={{ opacity: 0, scale: 0.5, x: "200", y: "10" }}
+            initial={{ opacity: 0.3, scale: 1, x: "50", y: "0" }}
             animate={{ opacity: 1, scale: 1, x: "0", y: "0" }}
             transition={{
-              duration: 0.8,
+              duration: 0.3,
               delay: 0.0,
-              ease: [0, 0.71, 0.2, 1.01],
+              // ease: [0, 0.71, 0.2, 1.01],
             }}
           >
             <Typography

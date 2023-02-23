@@ -8,11 +8,11 @@ import {
   Select,
   Typography,
 } from "@mui/material";
+import 'react-date-range/dist/styles.css'; 
+import 'react-date-range/dist/theme/default.css'; 
+import {Calendar} from 'react-date-range';
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   initialTasks,
@@ -26,6 +26,7 @@ import {
 } from "../features/userSlice";
 import {CREATE_TASK,UPDATE_TASK,DELETE_TASK} from '../graphql/TaskMutations';
 import { GET_USER } from "../graphql/Query";
+import "./calendar.css"
 interface props {
   isVisible: boolean;
   closeModal: () => void;
@@ -45,6 +46,8 @@ const AddTask: React.FC<props> = ({
   const [dueDate, setDueDate] = useState<Date>(new Date());
   const [id, setId] = useState("");
   const tasks = useSelector((state: any) => state.tasks.tasks);
+
+  const [showCalendar, setShowCalendar] = useState(false);
 
   useEffect(() => {
     if (mode === "edit") {
@@ -217,6 +220,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
           >
             <div
               onClick={handlebgclick}
@@ -231,13 +235,15 @@ const projectNames = projectList.map((project:any) => project.projectName);
                 height: "100%",
               }}
             />
+            
           </motion.div>
 
           {!showDeleteConfirm ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              exit={{ opacity: 0,}}
+              transition={{ duration: 0.2 }}
             >
               <Box
                 sx={{
@@ -256,16 +262,17 @@ const projectNames = projectList.map((project:any) => project.projectName);
                   height: "30rem",
                 }}
               >
-                <motion.div
-                  className="box"
-                  key={Title}
-                  initial={{ opacity: 0, scale: 0.5, x: "200", y: "10" }}
-                  animate={{ opacity: 1, scale: 1, x: "0", y: "0" }}
-                  transition={{
-                    duration: 0.4,
-                    delay: 0.0,
-                    ease: [0, 0.71, 0.2, 1.01],
-                  }}
+               <motion.div
+            className="box"
+            key={Title}
+            initial={{ opacity: 0.3, scale: 1, x: "50", y: "0" }}
+            animate={{ opacity: 1, scale: 1, x: "0", y: "0" }}
+            transition={{
+              duration: 0.2,
+              delay: 0.0,
+              // ease: [0, 0.71, 0.2, 1.01],
+            }}
+                 
                 >
                   <Typography
                     variant="h3"
@@ -294,7 +301,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
                     label="Task Name"
                     value={taskName}
                     onChange={(e) => setTaskName(e.target.value)}
-                    margin="normal"
+                    // margin="normal"
                     inputProps={{ style: { color: "white" } }}
                     InputLabelProps={{
                       style: { color: "white", outlineColor: "white" },
@@ -308,6 +315,8 @@ const projectNames = projectList.map((project:any) => project.projectName);
                       "& .MuiOutlinedInput-root:hover": {
                         "& fieldset": { borderColor: "white" },
                       },
+                      marginTop: "0.8rem",
+                      marginBottom: "0.2rem",
                     }}
                   />
                   <Box
@@ -315,6 +324,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
                       width: "30%",
                       display: "flex",
                       justifyContent: "space-between",
+                      marginTop:"0.5rem"
                     }}
                   >
                     <FormControl>
@@ -379,7 +389,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
                           },
                         }}
                       >
-                        {projects.map((p) => (
+                        {projects.map((p:any) => (
                           <MenuItem sx={{ color: "white" }} key={p} value={p}>
                             {p}
                           </MenuItem>
@@ -387,10 +397,34 @@ const projectNames = projectList.map((project:any) => project.projectName);
                       </Select>
                     </FormControl>
                   </Box>
-                  <DatePicker
-                    selected={dueDate}
-                    onChange={(date: Date) => setDueDate(date)}
-                  />
+                
+                  <TextField value={`${dueDate.getDate()}-${dueDate.getMonth()}-${dueDate.getFullYear()}`} 
+                  label="Due Date"
+                  InputLabelProps={{
+                    style: { color: "white", outlineColor: "white" },
+                  }}
+                  inputProps={{ style: { color: "white", outlineColor:"white",
+                padding:"10px 14px"
+                } }}
+                  sx={{
+                 "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "rgba(255,255,255,0.7)",
+                      },
+                      "& .MuiOutlinedInput-root:hover": {
+                        "& fieldset": { borderColor: "white" },
+                      },
+                      // height: "45px",
+                      marginTop:"0.87rem",
+                      // marginBottom:"0.9rem",
+                      width: "30%",
+                      
+                }}></TextField>
+                 {showCalendar && <Calendar
+                  date={dueDate} onChange={(date:Date)=>setDueDate(date)} 
+                  color="#33c6dd"
+                  className="calendar"
+                  
+                  />}
 
                   <Box
                     sx={{
@@ -450,6 +484,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+          
             >
               <Box
                 sx={{
@@ -468,16 +503,16 @@ const projectNames = projectList.map((project:any) => project.projectName);
                   height: "20rem",
                 }}
               >
-                <motion.div
-                  className="box"
-                  key={animateDelete}
-                  initial={{ opacity: 0, scale: 0.5, x: "200", y: "-5" }}
-                  animate={{ opacity: 1, scale: 1, x: "0", y: "0" }}
-                  transition={{
-                    duration: 0.4,
-                    delay: 0.0,
-                    ease: [0, 0.71, 0.2, 1.01],
-                  }}
+               <motion.div
+            className="box"
+            key={animateDelete}
+            initial={{ opacity: 0.3, scale: 0.8, x: "50", y: "-2" }}
+            animate={{ opacity: 1, scale: 1, x: "0", y: "0" }}
+            transition={{
+              duration: 0.2,
+              delay: 0.0,
+              // ease: [0, 0.71, 0.2, 1.01],
+            }}
                 >
                   <Typography
                     variant="h4"
