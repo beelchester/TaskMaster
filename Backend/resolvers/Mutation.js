@@ -68,13 +68,15 @@ exports.Mutation = {
     const user = await User.findOne({ email });
     const project = user.projects.find(project => project.projectName === projectName);
     project.projectName = newProjectName;
+    project.tasks.map(task=>task.project = newProjectName)
     await user.save();
     return user;
     },
     deleteProject: async (_, { email, projectName },{User}) => {
     const user = await User.findOne({ email });
     const project = user.projects.find(project => project.projectName === projectName);
-    user.projects.splice(project, 1);
+    user.projects=user.projects.filter(proj => proj !== project)
+    // project.tasks = project.tasks.filter(task => task !== t)
     await user.save();
     return user;
     }

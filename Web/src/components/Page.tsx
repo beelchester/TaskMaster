@@ -185,7 +185,7 @@ const taskClickHandler = (todo: Todo) => {
                   toggleTodo={toggleTodo}
                   showCompleted={showCompleted}
                   isVisible={isModalVisible} 
-                  closeModal={toggleModal}
+                  closeModal={() => setModalVisible(false)}
                   taskClickHandler={taskClickHandler}
                 
                 />

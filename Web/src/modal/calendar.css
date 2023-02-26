@@ -1,7 +1,7 @@
-.calendar {
+.calendar-div {
   position: fixed;
   z-index: 99999999999999999;
-  top: 345px;
+  top: 674px;
   left: 5
 }
 /* .calendar .rdrCalendar {

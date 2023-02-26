@@ -7,12 +7,13 @@ import {
   MenuItem,
   Select,
   Typography,
+  IconButton,
 } from "@mui/material";
 import 'react-date-range/dist/styles.css'; 
 import 'react-date-range/dist/theme/default.css'; 
 import {Calendar} from 'react-date-range';
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   initialTasks,
@@ -27,6 +28,7 @@ import {
 import {CREATE_TASK,UPDATE_TASK,DELETE_TASK} from '../graphql/TaskMutations';
 import { GET_USER } from "../graphql/Query";
 import "./calendar.css"
+import { Close } from "@mui/icons-material";
 interface props {
   isVisible: boolean;
   closeModal: () => void;
@@ -46,8 +48,51 @@ const AddTask: React.FC<props> = ({
   const [dueDate, setDueDate] = useState<Date>(new Date());
   const [id, setId] = useState("");
   const tasks = useSelector((state: any) => state.tasks.tasks);
+  
+  const task = {
+    id,
+    text: taskName,
+    priority,
+    project,
+    due: dueDate.toISOString(),
+    checked: false,
+    completed: false,
+  };
 
+  const refOne = useRef(null);
+  const refTwo = useRef(null);
+  const refThree = useRef(null);
   const [showCalendar, setShowCalendar] = useState(false);
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      if (isVisible && e.key === "Escape") {
+      console.log("firshmt")
+      closeModal()
+      }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (isVisible && e.key === "Enter") {
+        console.log("enter")
+        submitTask()
+      }
+    });
+
+
+    document.addEventListener("click", (e) => {
+      
+
+    if (isVisible && refTwo.current?.contains(e.target) && !refThree.current?.contains(e.target) &&refThree.current && refTwo.current) {
+      console.log("first")
+    setShowCalendar(true)
+    }
+
+    if (isVisible && !refOne.current?.contains(e.target)&& !refTwo.current?.contains(e.target)  && refOne.current) {
+    setShowCalendar(false)
+    }
+  });
+  console.log(refTwo.current)
+  
+  }, [isVisible])
 
   useEffect(() => {
     if (mode === "edit") {
@@ -58,16 +103,6 @@ const AddTask: React.FC<props> = ({
       setId(toEditTask.id);
     }
   }, [toEditTask]);
-
-  const task = {
-    id,
-    text: taskName,
-    priority,
-    project,
-    due: dueDate.toISOString(),
-    checked: false,
-    completed: false,
-  };
 
   const projectList = useSelector((state: any) => state.projects.projects);
 
@@ -127,8 +162,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
   const [updateTask] = useMutation(UPDATE_TASK);
 
   const handleUpdateTask = (task: any) => {
-    console.log(task);
-
+    
     updateTask({
       variables: {
         email: "sahil@sahil.com",
@@ -141,6 +175,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
       ],
     }).then(() => {
       fetchUser();
+      console.log(task);
     });
   };
 
@@ -163,15 +198,15 @@ const projectNames = projectList.map((project:any) => project.projectName);
       fetchUser();
     });
   };
-
   function submitTask() {
+    console.log(taskName)
+    if (taskName.trim().length === 0) return;
     if (mode === "edit") {
       // dispatch(editTask(task));
       handleUpdateTask(task);
       closeModal();
       return;
     }
-    if (taskName.trim().length === 0) return;
     // dispatch(addTask(task));
     handleCreateTask(task);
     closeModal();
@@ -220,7 +255,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.2}}
           >
             <div
               onClick={handlebgclick}
@@ -268,7 +303,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
             initial={{ opacity: 0.3, scale: 1, x: "50", y: "0" }}
             animate={{ opacity: 1, scale: 1, x: "0", y: "0" }}
             transition={{
-              duration: 0.2,
+              duration: 0.3,
               delay: 0.0,
               // ease: [0, 0.71, 0.2, 1.01],
             }}
@@ -397,15 +432,31 @@ const projectNames = projectList.map((project:any) => project.projectName);
                       </Select>
                     </FormControl>
                   </Box>
-                
-                  <TextField value={`${dueDate.getDate()}-${dueDate.getMonth()}-${dueDate.getFullYear()}`} 
+                  <TextField ref={refTwo} value={`${dueDate.getDate()}-${dueDate.getMonth()}-${dueDate.getFullYear()}`} 
                   label="Due Date"
                   InputLabelProps={{
                     style: { color: "white", outlineColor: "white" },
                   }}
                   inputProps={{ style: { color: "white", outlineColor:"white",
-                padding:"10px 14px"
+                padding:"10px 14px",
+                caretColor:"transparent",
+                
                 } }}
+                InputProps={{endAdornment: 
+                  <IconButton
+                  onClick={() => setShowCalendar(false)}
+                  ref={refThree}
+                  size="small"
+                  sx={{
+                    // bgcolor: "secondary.main",
+                    // ":hover": { bgcolor: "secondary.dark" },
+                  }}
+                >
+                  <Close  sx={{color: "secondary.main"}}/>
+                  {/* X */}
+  
+                </IconButton>
+                }}
                   sx={{
                  "& .MuiOutlinedInput-notchedOutline": {
                         borderColor: "rgba(255,255,255,0.7)",
@@ -418,13 +469,25 @@ const projectNames = projectList.map((project:any) => project.projectName);
                       // marginBottom:"0.9rem",
                       width: "30%",
                       
-                }}></TextField>
-                 {showCalendar && <Calendar
+                }}>
+                 
+                </TextField>
+                
+                <motion.div
+                className="calendar-div"
+                initial={{ opacity: 0, y: "-355px" }}
+                animate={{ opacity: 1, y: "-345px" }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                key = {showCalendar}
+                ref={refOne} >
+                 {showCalendar && <Calendar 
                   date={dueDate} onChange={(date:Date)=>setDueDate(date)} 
                   color="#33c6dd"
                   className="calendar"
                   
                   />}
+                  </motion.div>
 
                   <Box
                     sx={{
@@ -484,6 +547,10 @@ const projectNames = projectList.map((project:any) => project.projectName);
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              // transition={{
+              //   duration: 0.25,
+              //   delay: 0.0,
+              // }}
           
             >
               <Box
@@ -506,10 +573,10 @@ const projectNames = projectList.map((project:any) => project.projectName);
                <motion.div
             className="box"
             key={animateDelete}
-            initial={{ opacity: 0.3, scale: 0.8, x: "50", y: "-2" }}
+            initial={{ opacity: 0.3, scale: 1, x: "50", y: "0" }}
             animate={{ opacity: 1, scale: 1, x: "0", y: "0" }}
             transition={{
-              duration: 0.2,
+              duration: 0.3,
               delay: 0.0,
               // ease: [0, 0.71, 0.2, 1.01],
             }}

@@ -9,7 +9,7 @@ import AddTask from "../modal/AddTask";
 import { theme } from "../theme";
 
 interface Todo {
-  _typename: string;
+  _typename?: string;
   id: string;
   text: string;
   completed: boolean;

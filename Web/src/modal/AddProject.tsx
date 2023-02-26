@@ -1,25 +1,31 @@
 import { useMutation } from "@apollo/client";
 import { Typography, Button, Box, TextField } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
-import { CREATE_PROJECT } from "../graphql/ProjectMutations";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { changePage } from "../features/pageSlice";
+import { CREATE_PROJECT, UPDATE_PROJECT, DELETE_PROJECT } from "../graphql/ProjectMutations";
 import { GET_USER } from "../graphql/Query";
 
 interface props {
   isVisible: boolean;
   closeModal: () => void;
   mode?: string;
-  toEditTask?: any;
+  toEditProject?: any;
 }
 const AddProject: React.FC<props> = ({
   isVisible,
   closeModal,
+  mode,
+  toEditProject,
 }) => {
+
+  const dispatch = useDispatch();
   const [animateDelete, setAnimateDelete] = useState(0);
   const [projectName, setProjectName] = useState("");
 
   const [createProject] = useMutation(CREATE_PROJECT);
-
+  
   const handleCreateProject = (name: string) => {
     createProject({
       variables: {
@@ -32,6 +38,49 @@ const AddProject: React.FC<props> = ({
     })
   };
 
+  const [updateProject] = useMutation(UPDATE_PROJECT);
+  const handleEditProject = (name: string, newName:string) => {
+    updateProject({
+      variables: {
+        projectName: name,
+        email: "sahil@sahil.com",
+        newProjectName: newName
+      },
+      refetchQueries: [
+        { query: GET_USER, variables: { email: "sahil@sahil.com" } },
+      ],
+    })
+  };
+
+  const [deleteProject] = useMutation(DELETE_PROJECT);
+  const handleDeleteProject = (name: string) => {
+    deleteProject({
+      variables: {
+        projectName: name,
+        email: "sahil@sahil.com"
+      },
+      refetchQueries: [
+        { query: GET_USER, variables: { email: "sahil@sahil.com" } },
+      ],
+    })
+  };
+
+console.log(toEditProject?.projectName)
+console.log(projectName)
+  useEffect(() => {
+    if (mode === "edit") {
+      setProjectName(toEditProject?.projectName);
+      console.log("ffff")
+    }
+  }, [mode, toEditProject?.projectName]);
+
+  function editProject() {
+    setAnimateDelete(animateDelete + 1);
+    handleEditProject(toEditProject?.projectName,projectName);
+    dispatch(changePage(projectName))
+    closeModal();
+    setProjectName("");
+  }
 
   function submitProject() {
     setAnimateDelete(animateDelete + 1);
@@ -39,6 +88,13 @@ const AddProject: React.FC<props> = ({
     closeModal();
     setProjectName("");
   }
+
+  function deleteProjectHandler() {
+    setAnimateDelete(animateDelete + 1);
+    handleDeleteProject(toEditProject?.projectName);
+    closeModal();
+    setProjectName("");
+  } 
 return (
   <AnimatePresence>
      {isVisible && (
@@ -47,6 +103,7 @@ return (
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2}}
           >
             <div
               onClick={closeModal}
@@ -62,12 +119,15 @@ return (
               }}
             />
           </motion.div>
+
+
     <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.2}}
             >
-              <Box
+              { mode !== "delete" ? (<Box
                 sx={{
                   bgcolor: "background.paper",
                   position: "fixed",
@@ -87,12 +147,11 @@ return (
                 <motion.div
                   className="box"
                   key={animateDelete}
-                  initial={{ opacity: 0, scale: 0.5, x: "200", y: "-5" }}
+                  initial={{ opacity: 0.3, scale: 1, x: "50", y: "0" }}
                   animate={{ opacity: 1, scale: 1, x: "0", y: "0" }}
                   transition={{
-                    duration: 0.4,
+                    duration: 0.3,
                     delay: 0.0,
-                    ease: [0, 0.71, 0.2, 1.01],
                   }}
                 >
                   
@@ -114,12 +173,11 @@ return (
                  <motion.div
                   className="box"
                   // key={Title}
-                  initial={{ opacity: 0, scale: 0.5, x: "200", y: "10" }}
+                  initial={{ opacity: 0.3, scale: 1, x: "50", y: "0" }}
                   animate={{ opacity: 1, scale: 1, x: "0", y: "0" }}
                   transition={{
-                    duration: 0.4,
+                    duration: 0.3,
                     delay: 0.0,
-                    ease: [0, 0.71, 0.2, 1.01],
                   }}
                 >
                   <Typography
@@ -127,7 +185,7 @@ return (
                     component="h3"
                     sx={{ marginBottom: "1.5rem" }}
                   >
-                  Add Project
+                  {mode === "edit" ? "Edit Project" :  "Add Project"}
                   </Typography>
                 </motion.div> 
                  
@@ -169,7 +227,7 @@ return (
                       }}
                     >
                       <Button
-                      onClick={submitProject}
+                      onClick={() => {mode === "edit" ? editProject() : submitProject()}}
                         size="large"
                         sx={{
                           paddingX: "1.5rem",
@@ -179,15 +237,97 @@ return (
                           ":hover": { bgcolor: "secondary.dark" },
                         }}
                       >
-                        Add
+                        {mode === "edit" ? "Edit" : "Add"}
                       </Button>
-                      <Button  size="large">
+                      <Button onClick={closeModal}  size="large">
                         Cancel
                       </Button>
                     </Box>
               </Box>
                 </motion.div>
+              </Box>):
+              (
+                <Box
+                sx={{
+                  bgcolor: "background.paper",
+                  position: "fixed",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  paddingX: "60px",
+                  paddingY: "4rem",
+                  zIndex: 2000,
+                  border: "1px solid",
+                  borderColor: "rgba(255, 255, 255, 0.1)",
+                  borderRadius: "10px",
+                  width: "50rem",
+                  height: "20rem",
+                }}
+              >
+               <motion.div
+            className="box"
+            key={animateDelete}
+            initial={{ opacity: 0.3, scale: 1, x: "50", y: "0" }}
+            animate={{ opacity: 1, scale: 1, x: "0", y: "0" }}
+            transition={{
+              duration: 0.3,
+              delay: 0.0,
+              // ease: [0, 0.71, 0.2, 1.01],
+            }}
+                >
+                  <Typography
+                    variant="h4"
+                    component="h4"
+                    sx={{ marginBottom: "0.5rem" }}
+                  >
+                    Are you sure you want to delete
+                  </Typography>
+                  <Typography
+                    variant="h4"
+                    component="h4"
+                    display="inline"
+                    sx={{ fontWeight: "bold", marginRight: "0.5rem" }}
+                  >
+                    {toEditProject?.projectName}
+                  </Typography>
+                  <Typography variant="h4" component="h4" display="inline">
+                    project ?
+                  </Typography>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: 0.0,
+                  }}
+                  style={{
+                    display: "flex",
+                    marginTop: "3rem",
+                  }}
+                >
+                  <Button
+                    onClick={deleteProjectHandler}
+                    size="large"
+                    sx={{
+                      marginRight: "1.5rem",
+                      marginLeft: "0.1rem",
+                      paddingX: "1.5rem",
+                      bgcolor: "rgba(255, 41, 55, 0.8)",
+                      color: "white",
+                      ":hover": { bgcolor: "rgba(255, 41, 55, 0.76)" },
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button  size="large">
+                    Cancel
+                  </Button>
+                </motion.div>
               </Box>
+              )
+              }
             </motion.div>
           </>
         )}
