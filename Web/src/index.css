@@ -5,6 +5,15 @@
   font-family : 'Roboto', sans-serif;
   /* background-color: rgb(24, 24, 24); */
 }
+body {
+  /* Hide the scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 
+/* Hide the scrollbar on WebKit-based browsers */
+body::-webkit-scrollbar {
+  display: none;
+}
 
 

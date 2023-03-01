@@ -14,11 +14,7 @@ const dateScalar = new GraphQLScalarType({
   parseValue(value) {
     return new Date(value);
   },
-  // serialize(value) {
-  //   console.log(typeof(value))
-  //     return value.toISOString();
-  // },
-}) // custom scalar type
+})
 
 async function startServer() {
   const app = express()

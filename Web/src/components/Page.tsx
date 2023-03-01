@@ -25,7 +25,7 @@ interface Todo {
   id: string;
   text: string;
   completed: boolean;
-  due: Date ;
+  due: Date|null ;
   priority: string;
   project: string;
   checked: boolean;
@@ -70,6 +70,16 @@ export default function Page() {
   function handleSortChange(event: SelectChangeEvent) {
     setSort(event.target.value);
   }
+  console.log(sort)
+  useEffect(() => {
+    if (sort == "3" && page !== "Today"&& page !== "Upcoming") {
+    setSort("1");
+    }
+    if (sort =="2" && page == "Today") {
+      setSort("1");
+    }
+  }, [page]);
+
 
   const [editModalVisible, setEditModalVisible] = useState(false);
   function editClickHandler() {
@@ -149,8 +159,8 @@ const taskClickHandler = (todo: Todo) => {
                 }}
               >
                 <MenuItem value={1} sx={{color:'white'}}>By Priority</MenuItem>
-                <MenuItem value={2} sx={{color:'white'}}>By Due Date</MenuItem>
-                <MenuItem value={3} sx={{color:'white'}}>By Project</MenuItem>
+                {page!=="Today"&&<MenuItem value={2} sx={{color:'white'}}>By Due Date</MenuItem>}
+                {(page==="Today"||page==="Upcoming")&&<MenuItem value={3} sx={{color:'white'}}>By Project</MenuItem>}
               </Select>
               
             </Box>
@@ -175,8 +185,29 @@ const taskClickHandler = (todo: Todo) => {
           ? todos
               .filter(
                 (todo) =>
-                  new Date(todo.due).getDate() === new Date().getDate() && todo.completed === showCompleted
+                 todo.due&& new Date(todo.due).getDate() === new Date().getDate() && todo.completed === showCompleted
               )
+              .sort((a, b) => {
+                return new Date(a.due) - new Date(b.due);
+              })
+              .sort((a, b) => {
+                const priorityValues = {
+                  P1: 1,
+                  P2: 2,
+                  P3: 3
+                };
+              
+                if (sort == '1') {
+                  return priorityValues[a.priority] - priorityValues[b.priority];
+                }
+                else if (sort == '3') {
+                  const projectNameComparison = a.project.localeCompare(b.project);
+                  if (projectNameComparison !== 0) {
+                    return projectNameComparison;
+                  }
+                }
+                  return ; 
+              })
               .map((todo: Todo, index) => (
                 <TaskCard
                   key={todo.id}
@@ -193,6 +224,35 @@ const taskClickHandler = (todo: Todo) => {
           : todos !== undefined && page === "Upcoming"
           ? todos
               .filter((todo) => todo.completed === showCompleted)
+              .sort((a, b) => {
+                if (!a.due && !b.due) {
+                  return 0;
+                } else if (!a.due) {
+                  return 1;
+                } else if (!b.due) {
+                  return -1;
+                } else {
+                  return new Date(a.due) - new Date(b.due);
+                }
+              })
+              .sort((a, b) => {
+                const priorityValues = {
+                  P1: 1,
+                  P2: 2,
+                  P3: 3
+                };
+              
+                if (sort == '1') {
+                  return priorityValues[a.priority] - priorityValues[b.priority];
+                }
+                else if (sort == '3') {
+                  const projectNameComparison = a.project.localeCompare(b.project);
+                  if (projectNameComparison !== 0) {
+                    return projectNameComparison;
+                  }
+                }
+                  return ; 
+              })
               .map((todo: Todo, index) => (
                 <TaskCard
                   key={todo.id}
@@ -211,6 +271,35 @@ const taskClickHandler = (todo: Todo) => {
                 (todo) =>
                   todo.project === page && todo.completed === showCompleted
               )
+              .sort((a, b) => {
+                if (!a.due && !b.due) {
+                  return 0;
+                } else if (!a.due) {
+                  return 1;
+                } else if (!b.due) {
+                  return -1;
+                } else {
+                  return new Date(a.due) - new Date(b.due);
+                }
+              })
+              .sort((a, b) => {
+                const priorityValues = {
+                  P1: 1,
+                  P2: 2,
+                  P3: 3
+                };
+              
+                if (sort == '1') {
+                  return priorityValues[a.priority] - priorityValues[b.priority];
+                }
+                else if (sort == '3') {
+                  const projectNameComparison = a.project.localeCompare(b.project);
+                  if (projectNameComparison !== 0) {
+                    return projectNameComparison;
+                  }
+                }
+                  return ; 
+              })
               .map((todo: Todo, index) => (
                 <TaskCard
                   key={todo.id}

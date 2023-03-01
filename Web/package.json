@@ -3,27 +3,36 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+
+  "main" : "electron/main.js",
+  "homepage": "./",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron": "electron ./electron/main.cjs"
   },
   "dependencies": {
     "@apollo/client": "^3.7.8",
+    "@electron/remote": "^2.0.9",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.7",
     "@react-oauth/google": "^0.8.0",
     "@reduxjs/toolkit": "^1.9.2",
+    "concurrently": "^7.6.0",
+    "cross-env": "^7.0.3",
     "date-fns": "^2.29.3",
+    "electron": "^23.1.1",
     "framer-motion": "^9.0.1",
     "jwt-decode": "^3.1.2",
     "react": "^18.2.0",
     "react-date-range": "^1.4.0",
     "react-datepicker": "^4.10.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^8.0.5"
+    "react-redux": "^8.0.5",
+    "wait-on": "^7.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

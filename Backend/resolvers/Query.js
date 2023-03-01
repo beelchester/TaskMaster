@@ -1,6 +1,5 @@
 exports.Query = {
   getAllUsers: async (parent, args, { User }) => {
-    console.log(User)
     return await User.find()
 },
 getUser: async (parent, { email }, { User }) => {

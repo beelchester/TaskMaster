@@ -84,7 +84,6 @@ const Login = () => {
           <GoogleLogin
     size="large"
   onSuccess={credentialResponse => {
-    console.log(credentialResponse);
     if (credentialResponse.credential) {
       const decoded = jwt_decode(credentialResponse.credential);
       const user = {

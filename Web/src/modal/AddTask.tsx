@@ -44,19 +44,31 @@ const AddTask: React.FC<props> = ({
   mode,
   toEditTask,
 }) => {
+  const page = useSelector((state: any) => state.page.currentPage);
   const [taskName, setTaskName] = useState("");
   const [priority, setPriority] = useState("P1");
-  const [project, setProject] = useState("School");
-  const [dueDate, setDueDate] = useState<Date>(new Date());
+  const [project, setProject] = useState("Inbox");
+  const [dueDate, setDueDate] = useState<Date | null>(null);
   const [id, setId] = useState("");
   const tasks = useSelector((state: any) => state.tasks.tasks);
-  
+  useEffect(() => {
+    if (page!=="Inbox"&&page!=="Today"&&page!=="Upcoming") {
+      setProject(page)
+    }
+    if(page==="Today"){
+      setDueDate(new Date())
+    }
+    else{
+      setDueDate(null)
+    }
+  }, [page])
+      
   const task = {
     id,
     text: taskName,
     priority,
     project,
-    due: dueDate.toISOString(),
+    due: dueDate?.toISOString(),
     checked: false,
     completed: false,
   };
@@ -68,13 +80,11 @@ const AddTask: React.FC<props> = ({
   useEffect(() => {
     document.addEventListener("keydown", (e) => {
       if (isVisible && e.key === "Escape") {
-      console.log("firshmt")
       closeModal()
       }
     });
     document.addEventListener("keydown", (e) => {
       if (isVisible && e.key === "Enter") {
-        console.log("enter")
         submitTask()
       }
     });
@@ -84,7 +94,6 @@ const AddTask: React.FC<props> = ({
       
 
     if (isVisible && refTwo.current?.contains(e.target) && !refThree.current?.contains(e.target) &&refThree.current && refTwo.current) {
-      console.log("first")
     setShowCalendar(true)
     }
 
@@ -92,7 +101,6 @@ const AddTask: React.FC<props> = ({
     setShowCalendar(false)
     }
   });
-  console.log(refTwo.current)
   
   }, [isVisible])
 
@@ -101,7 +109,7 @@ const AddTask: React.FC<props> = ({
       setTaskName(toEditTask.text);
       setPriority(toEditTask.priority);
       setProject(toEditTask.project);
-      setDueDate(new Date(toEditTask.due));
+      setDueDate(toEditTask.due && new Date(toEditTask.due));
       setId(toEditTask.id);
     }
   }, [toEditTask]);
@@ -114,7 +122,6 @@ const projectNames = projectList.map((project:any) => project.projectName);
 
   const priorities = ["P1", "P2", "P3"];
   const projects = projectNames
-// console.log(projects)
   const Title =
     mode === "edit"
       ? "Edit Task"
@@ -178,7 +185,6 @@ const projectNames = projectList.map((project:any) => project.projectName);
       ],
     }).then(() => {
       fetchUser();
-      console.log(task);
     });
   };
 
@@ -186,7 +192,6 @@ const projectNames = projectList.map((project:any) => project.projectName);
   
   const [deleteTask] = useMutation(DELETE_TASK);
   const handleDeleteTask = (task: any) => {
-    console.log(task.id);
     dispatch(changePage("Inbox"))
     deleteTask({
       variables: {
@@ -203,7 +208,6 @@ const projectNames = projectList.map((project:any) => project.projectName);
     });
   };
   function submitTask() {
-    console.log(taskName)
     if (taskName.trim().length === 0) return;
     if (mode === "edit") {
       // dispatch(editTask(task));
@@ -224,7 +228,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
     closeModal();
     setTaskName("");
     setPriority("P1");
-    setProject("School");
+    setProject("Inbox");
     setDueDate(new Date());
   }
 
@@ -246,6 +250,17 @@ const projectNames = projectList.map((project:any) => project.projectName);
   function deleteConfirmHandler() {
     setShowDeleteConfirm(!showDeleteConfirm);
     setAnimateDelete((prev) => prev++);
+  }
+
+  function noDateHandler(){
+    setDueDate(null)
+    setShowCalendar(false)
+  }
+  function dateFieldHandler(){
+    if (dueDate !==null){
+      return `${dueDate.getDate()}-${dueDate.getMonth()+1}-${dueDate.getFullYear()}`
+    }
+    return "No Due Date"
   }
 
   return (
@@ -436,7 +451,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
                       </Select>
                     </FormControl>
                   </Box>
-                  <TextField ref={refTwo} value={`${dueDate.getDate()}-${dueDate.getMonth()}-${dueDate.getFullYear()}`} 
+                  <TextField ref={refTwo} value={dateFieldHandler()} 
                   label="Due Date"
                   InputLabelProps={{
                     style: { color: "white", outlineColor: "white" },
@@ -444,20 +459,19 @@ const projectNames = projectList.map((project:any) => project.projectName);
                   inputProps={{ style: { color: "white", outlineColor:"white",
                 padding:"10px 14px",
                 caretColor:"transparent",
-                
                 } }}
                 InputProps={{endAdornment: 
                   <IconButton
-                  onClick={() => setShowCalendar(false)}
+                  onClick={noDateHandler}
                   ref={refThree}
                   size="small"
                   sx={{
                     // bgcolor: "secondary.main",
                     // ":hover": { bgcolor: "secondary.dark" },
+                    visibility: dueDate ? "visible" : "hidden",
                   }}
                 >
                   <Close  sx={{color: "secondary.main"}}/>
-                  {/* X */}
   
                 </IconButton>
                 }}

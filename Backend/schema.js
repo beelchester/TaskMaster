@@ -6,7 +6,7 @@ scalar Date
     id : ID!
     text: String!
     completed: Boolean!
-    due: Date!
+    due: Date
     priority: String!
     project: String!
     checked: Boolean!
@@ -47,7 +47,7 @@ scalar Date
     id: ID
     text: String!
     completed: Boolean!
-    due: String!
+    due: String
     priority: String!
     project: String!
     checked: Boolean!

@@ -4,7 +4,7 @@ interface Todo {
   id: string;
   text: string;
   completed: boolean;
-  due: Date | String;
+  due: Date | String |null;
   priority: string;
   project: string;
   checked: boolean;

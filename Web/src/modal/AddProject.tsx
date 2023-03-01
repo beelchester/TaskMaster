@@ -66,12 +66,9 @@ const AddProject: React.FC<props> = ({
     })
   };
 
-console.log(toEditProject?.projectName)
-console.log(projectName)
   useEffect(() => {
     if (mode === "edit") {
       setProjectName(toEditProject?.projectName);
-      console.log("ffff")
     }
   }, [mode, toEditProject?.projectName]);
 

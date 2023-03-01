@@ -63,7 +63,6 @@ const currentUser = useSelector((state: any) => state.user.user);
   const [hoveredIndex2, setHoveredIndex2] = useState(null);
 
   const [editProjectMenu, setEditProjectMenu] = useState(null);
-  console.log(editProjectMenu);
   function closeAddModal() {
     setAddModalVisible(false);
   }
@@ -278,7 +277,7 @@ const currentUser = useSelector((state: any) => state.user.user);
           <Typography sx={{fontWeight:'bold',marginLeft:'12px',cursor:'default'}}>{currentUser.name}</Typography>
           </Box>
           <IconButton onClick={()=>setSignOutModalVisible(true)} sx={{padding:'0px'}} >
-            <Logout sx={{color:'white'}}/>
+            <Logout sx={{color:'white', width:'20px'}}/>
           </IconButton>
         </Box>
         </Box>

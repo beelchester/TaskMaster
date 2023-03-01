@@ -35,7 +35,6 @@ exports.Mutation = {
     // }
     project.tasks.push(task);
     await user.save();
-    console.log(project)
     return task
     },
     updateTask: async (_, { email, projectName, taskId, updatedTask },{User}) => {
