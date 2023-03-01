@@ -141,7 +141,7 @@ const handleUpdateTask = (task: any) => {
   updateTask({
     variables: {
       email: currentUser.email,
-      projectName: 'Inbox',
+      projectName: task.project,
       taskId: task.id,
       updatedTask: task
     },

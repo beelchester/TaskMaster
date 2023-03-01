@@ -22,6 +22,7 @@ import { GET_USER } from "../graphql/Query";
 import { fetchUserFailure, fetchUserStart, fetchUserSuccess } from "../features/fetchUserSlice";
 import { fetchProject } from "../features/projectSlice";
 import { initialTasks } from "../features/taskSlice";
+import Signout from "../modal/Signout";
 
 const drawerWidth = 240;
 
@@ -56,6 +57,7 @@ const currentUser = useSelector((state: any) => state.user.user);
   const projects = useSelector((state: any) => state.projects.projects);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
+  const[signOutModalVisible,setSignOutModalVisible] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [hoveredIndex1, setHoveredIndex1] = useState(null);
   const [hoveredIndex2, setHoveredIndex2] = useState(null);
@@ -71,6 +73,7 @@ const currentUser = useSelector((state: any) => state.user.user);
   function closeDeleteModal() {
     setDeleteModalVisible(false);
   }
+
 
   const [selectProject, setSelectProject] = useState(null);
 
@@ -104,7 +107,7 @@ const currentUser = useSelector((state: any) => state.user.user);
             color: "primary.main",
 
             zIndex:
-              addModalVisible || editModalVisible || deleteModalVisible
+              addModalVisible || editModalVisible || deleteModalVisible || signOutModalVisible
                 ? 20
                 : 0,
           },
@@ -268,12 +271,13 @@ const currentUser = useSelector((state: any) => state.user.user);
           closeModal={closeDeleteModal}
           isVisible={deleteModalVisible}
         />
+        <Signout isVisible={signOutModalVisible} closeModal={()=>setSignOutModalVisible(false)}/>
         <Box sx={{padding:'0.8rem',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <Box sx={{display:'flex',alignItems:'center'}}>
           <img src={currentUser.picture} style={{borderRadius:"50%", width:"2.7rem"}}/>
           <Typography sx={{fontWeight:'bold',marginLeft:'12px',cursor:'default'}}>{currentUser.name}</Typography>
           </Box>
-          <IconButton sx={{padding:'0px'}} >
+          <IconButton onClick={()=>setSignOutModalVisible(true)} sx={{padding:'0px'}} >
             <Logout sx={{color:'white'}}/>
           </IconButton>
         </Box>
