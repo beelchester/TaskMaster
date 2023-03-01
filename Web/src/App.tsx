@@ -1,64 +1,45 @@
-import { useEffect, useState } from 'react'
-import LeftDrawer from './components/LeftDrawer'
-import Page from './components/Page'
+/*global google*/
+import { useEffect, useState } from "react";
+import LeftDrawer from "./components/LeftDrawer";
+import Page from "./components/Page";
 
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserStart, fetchUserFailure, fetchUserSuccess } from './features/userSlice';
-import { useQuery, gql, useMutation } from '@apollo/client';
-import { fetchProject } from './features/projectSlice';
-import { initialTasks } from './features/taskSlice';
-import { Button } from '@mui/material';
-import { GET_USER } from './graphql/Query';
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchUserStart,
+  fetchUserFailure,
+  fetchUserSuccess,
+} from "./features/fetchUserSlice";
+import { useQuery, gql, useMutation } from "@apollo/client";
+import { fetchProject } from "./features/projectSlice";
+import { initialTasks } from "./features/taskSlice";
+import { Button } from "@mui/material";
+import { GET_USER } from "./graphql/Query";
+import Login from "./components/Login";
 
 function App() {
   const dispatch = useDispatch();
-    const projectsList = useSelector((state: any) => state.projects.projects);
-    const user = useQuery(GET_USER, {
-      variables: { email: "sahil@sahil.com" },
-    });
-   
-    useEffect (() => {
-      fetchUser()
-    }, [user])
-    
-    const fetchUser = () => {
-      
-      if (user.loading) {
-        dispatch(fetchUserStart());
-        
-      }
-      if (user.error) {
-        dispatch(fetchUserFailure(user.error));
-      }
-      if (user.data) {
-        dispatch(fetchUserSuccess(user.data.getUser));
-        dispatch(fetchProject(user.data.getUser.projects));
-        dispatch(initialTasks(user.data.getTasks));
-      }
-    }
+  const currentUser = useSelector((state: any) => state.user.user);
+  const projectsList = useSelector((state: any) => state.projects.projects);
 
 
-  
-  
+  const tasks = useSelector((state: any) => state.tasks.tasks);
 
-  
-    const tasks = useSelector((state: any) => state.tasks.tasks);
-   
-
+  const login = useSelector((state: any) => state.user.login);
 
   const page = useSelector((state: any) => state.page.currentPage);
   return (
-    <Box sx={{display:'flex'}}>
-      <LeftDrawer/>
-    
-      <Page />
-
-
-      
-    </Box>
-  )
+    <>
+      {!login ? (
+        <Login />
+      ) : (
+        <Box sx={{ display: "flex" }}>
+          <LeftDrawer />
+          <Page />
+        </Box>
+      )}
+    </>
+  );
 }
-export default App
+export default App;

@@ -24,11 +24,13 @@ import {
   fetchUserStart,
   fetchUserFailure,
   fetchUserSuccess,
-} from "../features/userSlice";
+} from "../features/fetchUserSlice";
 import {CREATE_TASK,UPDATE_TASK,DELETE_TASK} from '../graphql/TaskMutations';
 import { GET_USER } from "../graphql/Query";
 import "./calendar.css"
 import { Close } from "@mui/icons-material";
+import Page from "../components/Page";
+import { changePage } from "../features/pageSlice";
 interface props {
   isVisible: boolean;
   closeModal: () => void;
@@ -122,10 +124,11 @@ const projectNames = projectList.map((project:any) => project.projectName);
 
   const dispatch = useDispatch();
 
+  const currentUser = useSelector((state: any) => state.user.user);
  
 
   const user = useQuery(GET_USER, {
-    variables: { email: "sahil@sahil.com" },
+    variables: { email: currentUser.email },
   });
   const fetchUser = () => {
     if (user.loading) {
@@ -146,12 +149,12 @@ const projectNames = projectList.map((project:any) => project.projectName);
   const handleCreateTask = (task: any) => {
     createTask({
       variables: {
-        email: "sahil@sahil.com",
+        email: currentUser.email,
         projectName: task.project,
         task,
       },
       refetchQueries: [
-        { query: GET_USER, variables: { email: "sahil@sahil.com" } },
+        { query: GET_USER, variables: { email: currentUser.email } },
       ],
     }).then(() => {
       fetchUser();
@@ -165,13 +168,13 @@ const projectNames = projectList.map((project:any) => project.projectName);
     
     updateTask({
       variables: {
-        email: "sahil@sahil.com",
-        projectName: "Inbox",
+        email: currentUser.email,
+        projectName: task.project,
         taskId: task.id,
         updatedTask: task,
       },
       refetchQueries: [
-        { query: GET_USER, variables: { email: "sahil@sahil.com" } },
+        { query: GET_USER, variables: { email: currentUser.email } },
       ],
     }).then(() => {
       fetchUser();
@@ -180,21 +183,22 @@ const projectNames = projectList.map((project:any) => project.projectName);
   };
 
 
-
+  
   const [deleteTask] = useMutation(DELETE_TASK);
-
   const handleDeleteTask = (task: any) => {
     console.log(task.id);
+    dispatch(changePage("Inbox"))
     deleteTask({
       variables: {
-        email: "sahil@sahil.com",
-        projectName: "Inbox",
+        email: currentUser.email,
+        projectName: task.project,
         taskId: task.id,
       },
       refetchQueries: [
-        { query: GET_USER, variables: { email: "sahil@sahil.com" } },
+        { query: GET_USER, variables: { email: currentUser.email } },
       ],
     }).then(() => {
+      
       fetchUser();
     });
   };

@@ -1,4 +1,5 @@
-
+// dotenv import
+require('dotenv').config();
 const mongoose = require('mongoose');
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
@@ -34,14 +35,15 @@ async function startServer() {
   server.applyMiddleware({ app });
  
   mongoose.set('strictQuery', true); // to avoid deprecation warning 
-  await mongoose.connect('mongodb://localhost:27017/Taskmaster0');
+  await mongoose.connect(process.env.MONGO_URI);
   console.log("mongodb connected")
   app.use((req ,res ) => {
     res.send('Hello World');
   } )
-  app.listen({port: 4000}, () => {
-    console.log(`Server ready at port 4000`);
-  } );
+  const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 }
 
 startServer();

@@ -9,17 +9,46 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { Button, IconButton, ThemeProvider } from "@mui/material";
-import { MoreVert } from "@mui/icons-material";
+import { Box, Button, IconButton, ThemeProvider } from "@mui/material";
+import { MoreVert, Logout } from "@mui/icons-material";
 import { theme } from "../theme";
 import { changePage } from "../features/pageSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import AddProject from "../modal/AddProject";
+import { current } from "@reduxjs/toolkit";
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "../graphql/Query";
+import { fetchUserFailure, fetchUserStart, fetchUserSuccess } from "../features/fetchUserSlice";
+import { fetchProject } from "../features/projectSlice";
+import { initialTasks } from "../features/taskSlice";
 
 const drawerWidth = 240;
 
 export default function LeftDrawer() {
+const currentUser = useSelector((state: any) => state.user.user);
+  const user = useQuery(GET_USER, {
+    variables: { email: currentUser.email },
+  });
+
+  useEffect(() => {
+    fetchUser();
+  }, [user]);
+
+  const fetchUser = () => {
+    if (user.loading) {
+      dispatch(fetchUserStart());
+    }
+    if (user.error) {
+      dispatch(fetchUserFailure(user.error));
+      return
+    }
+    if (user.data) {
+      dispatch(fetchUserSuccess(user.data.getUser));
+      dispatch(fetchProject(user.data.getUser.projects));
+      dispatch(initialTasks(user.data.getTasks));
+    }
+  };
   const dispatch = useDispatch();
   const handleClickPage = (title: string) => {
     dispatch(changePage(title));
@@ -59,7 +88,6 @@ export default function LeftDrawer() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [refOne]);
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -67,6 +95,7 @@ export default function LeftDrawer() {
       <Drawer
         sx={{
           width: drawerWidth,
+
           flexShrink: 0,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
@@ -83,9 +112,10 @@ export default function LeftDrawer() {
         variant="permanent"
         anchor="left"
       >
+        <Box sx={{ height:'100vh',display:"flex",flexDirection:'column',justifyContent:'space-between'}}>
+        <Box>
         <Typography
           variant="h6"
-          component="p"
           sx={{
             color: "secondary.main",
             fontWeight: "bold",
@@ -222,7 +252,9 @@ export default function LeftDrawer() {
             );
           })}
         </List>
-        <Button onClick={() => setAddModalVisible(true)}>Add Project</Button>
+        </Box>
+        <Box>
+        <Button sx={{width:"100%",margin:'0.5rem 0px'}} onClick={() => setAddModalVisible(true)}>Add Project</Button>
         <AddProject isVisible={addModalVisible} closeModal={closeAddModal} />
         <AddProject
           toEditProject={selectProject}
@@ -236,6 +268,17 @@ export default function LeftDrawer() {
           closeModal={closeDeleteModal}
           isVisible={deleteModalVisible}
         />
+        <Box sx={{padding:'0.8rem',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <Box sx={{display:'flex',alignItems:'center'}}>
+          <img src={currentUser.picture} style={{borderRadius:"50%", width:"2.7rem"}}/>
+          <Typography sx={{fontWeight:'bold',marginLeft:'12px',cursor:'default'}}>{currentUser.name}</Typography>
+          </Box>
+          <IconButton sx={{padding:'0px'}} >
+            <Logout sx={{color:'white'}}/>
+          </IconButton>
+        </Box>
+        </Box>
+        </Box>
       </Drawer>
     </ThemeProvider>
   );

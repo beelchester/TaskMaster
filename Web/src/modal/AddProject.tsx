@@ -2,7 +2,7 @@ import { useMutation } from "@apollo/client";
 import { Typography, Button, Box, TextField } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { changePage } from "../features/pageSlice";
 import { CREATE_PROJECT, UPDATE_PROJECT, DELETE_PROJECT } from "../graphql/ProjectMutations";
 import { GET_USER } from "../graphql/Query";
@@ -23,6 +23,7 @@ const AddProject: React.FC<props> = ({
   const dispatch = useDispatch();
   const [animateDelete, setAnimateDelete] = useState(0);
   const [projectName, setProjectName] = useState("");
+  const currentUser = useSelector((state: any) => state.user.user);
 
   const [createProject] = useMutation(CREATE_PROJECT);
   
@@ -30,10 +31,10 @@ const AddProject: React.FC<props> = ({
     createProject({
       variables: {
         projectName: name,
-        email: "sahil@sahil.com"
+        email: currentUser.email
       },
       refetchQueries: [
-        { query: GET_USER, variables: { email: "sahil@sahil.com" } },
+        { query: GET_USER, variables: { email: currentUser.email } },
       ],
     })
   };
@@ -43,11 +44,11 @@ const AddProject: React.FC<props> = ({
     updateProject({
       variables: {
         projectName: name,
-        email: "sahil@sahil.com",
+        email: currentUser.email,
         newProjectName: newName
       },
       refetchQueries: [
-        { query: GET_USER, variables: { email: "sahil@sahil.com" } },
+        { query: GET_USER, variables: { email: currentUser.email } },
       ],
     })
   };
@@ -57,10 +58,10 @@ const AddProject: React.FC<props> = ({
     deleteProject({
       variables: {
         projectName: name,
-        email: "sahil@sahil.com"
+        email: currentUser.email
       },
       refetchQueries: [
-        { query: GET_USER, variables: { email: "sahil@sahil.com" } },
+        { query: GET_USER, variables: { email: currentUser.email } },
       ],
     })
   };

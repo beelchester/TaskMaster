@@ -1,7 +1,10 @@
 exports.Mutation = {
   
     createUser: async (_, { email },{User}) => {
-      
+     const findUser = await User.findOne({ email })
+      if (findUser) {
+      return
+      }
       const user = new User({ email, projects: [{projectName: 'Inbox', tasks: []}] });
       await user.save();
       return user;

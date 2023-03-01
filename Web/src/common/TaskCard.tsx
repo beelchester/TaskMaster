@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProject } from "../features/projectSlice";
 import { initialTasks } from "../features/taskSlice";
-import { fetchUserFailure, fetchUserStart, fetchUserSuccess } from "../features/userSlice";
+import { fetchUserFailure, fetchUserStart, fetchUserSuccess } from "../features/fetchUserSlice";
 import AddTask from "../modal/AddTask";
 import { theme } from "../theme";
 
@@ -34,7 +34,7 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted,clos
  
   const page = useSelector((state: any) => state.page.currentPage);
   const [elevation, setElevation] = useState(3);
-
+  const currentUser = useSelector((state: any) => state.user.user);
   function dateFormatter(date: Date) {
     let dateStr = date.toDateString().substring(0, date.toDateString().length - 5);
     let day = dateStr.slice(0, 3);
@@ -54,6 +54,7 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted,clos
   
   }
 
+  // console.log(todo)
 
   const GET_USER = gql`
   query Query($email: String!) {
@@ -84,7 +85,7 @@ const TaskCard: React.FC<props> = ({ todo, toggleTodo, index, showCompleted,clos
 `;
 
 const user = useQuery(GET_USER, {
-  variables: { email: "sahil@sahil.com" },
+  variables: { email: currentUser.email },
 });
 const fetchUser = () => {
       
@@ -139,12 +140,12 @@ const handleUpdateTask = (task: any) => {
 
   updateTask({
     variables: {
-      email: 'sahil@sahil.com',
+      email: currentUser.email,
       projectName: 'Inbox',
       taskId: task.id,
       updatedTask: task
     },
-    refetchQueries: [{ query: GET_USER, variables: { email: 'sahil@sahil.com' } }],
+    refetchQueries: [{ query: GET_USER, variables: { email: currentUser.email } }],
   }).then(() => {
     fetchUser();
   });
