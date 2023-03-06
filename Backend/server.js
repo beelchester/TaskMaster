@@ -1,5 +1,6 @@
 // dotenv import
 require('dotenv').config();
+const cors = require('cors');
 const mongoose = require('mongoose');
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
@@ -30,6 +31,13 @@ async function startServer() {
 });
   await server.start();
   server.applyMiddleware({ app });
+ 
+  app.use(
+    cors({
+      origin: "https://taskmaster0.netlify.app",
+      optionsSuccessStatus: 200,
+    })
+  );
  
   mongoose.set('strictQuery', true); // to avoid deprecation warning 
   await mongoose.connect(process.env.MONGO_URI);

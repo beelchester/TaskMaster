@@ -3,8 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-
-  "main" : "electron/main.js",
+  "main": "electron/main.js",
   "homepage": "./",
   "scripts": {
     "dev": "vite",
@@ -24,6 +23,7 @@
     "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
     "date-fns": "^2.29.3",
+    "dotenv": "^16.0.3",
     "electron": "^23.1.1",
     "framer-motion": "^9.0.1",
     "jwt-decode": "^3.1.2",
