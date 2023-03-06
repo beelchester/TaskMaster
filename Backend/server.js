@@ -8,7 +8,7 @@ const {Query} = require('./resolvers/Query');
 const {Mutation} = require('./resolvers/Mutation');
 const {GraphQLScalarType} = require('graphql');
 const User = require('./models/User.model');
-
+const RefreshToken = require('./models/RefreshToken.model');
 const dateScalar = new GraphQLScalarType({
   name: 'Date',
   parseValue(value) {
@@ -25,6 +25,7 @@ async function startServer() {
   },
   context: {
     User,
+    RefreshToken,
   }
 });
   await server.start();
@@ -41,5 +42,4 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 }
-
 startServer();

@@ -81,5 +81,5 @@ exports.Mutation = {
     // project.tasks = project.tasks.filter(task => task !== t)
     await user.save();
     return user;
-    }
+    },
   }

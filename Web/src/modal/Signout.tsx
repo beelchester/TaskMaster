@@ -22,6 +22,9 @@ closeModal
   function signOutHandler(){
     dispatch(setLogin(false))
     dispatch(setUser({name:'', email:'',picture:''}))
+    localStorage.removeItem("accessToken")
+    localStorage.removeItem("refreshToken")
+    localStorage.removeItem("user")
     closeModalHandler()
   }
   return (

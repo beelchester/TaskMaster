@@ -73,9 +73,9 @@ const AddTask: React.FC<props> = ({
     completed: false,
   };
 
-  const refOne = useRef(null);
-  const refTwo = useRef(null);
-  const refThree = useRef(null);
+  const refOne = useRef<HTMLDivElement>(null);
+  const refTwo = useRef<HTMLDivElement>(null);
+  const refThree = useRef<HTMLDivElement>(null);
   const [showCalendar, setShowCalendar] = useState(false);
   useEffect(() => {
     document.addEventListener("keydown", (e) => {
@@ -93,11 +93,11 @@ const AddTask: React.FC<props> = ({
     document.addEventListener("click", (e) => {
       
 
-    if (isVisible && refTwo.current?.contains(e.target) && !refThree.current?.contains(e.target) &&refThree.current && refTwo.current) {
+    if (isVisible && refTwo.current?.contains(e.target as Node) && !refThree.current?.contains(e.target as Node) &&refThree.current && refTwo.current) {
     setShowCalendar(true)
     }
 
-    if (isVisible && !refOne.current?.contains(e.target)&& !refTwo.current?.contains(e.target)  && refOne.current) {
+    if (isVisible && !refOne.current?.contains(e.target as Node)&& !refTwo.current?.contains(e.target as Node)  && refOne.current) {
     setShowCalendar(false)
     }
   });
@@ -145,9 +145,10 @@ const projectNames = projectList.map((project:any) => project.projectName);
       dispatch(fetchUserFailure(user.error));
     }
     if (user.data) {
-      dispatch(fetchUserSuccess(user.data.getUser));
-      dispatch(fetchProject(user.data.getUser.projects));
-      dispatch(initialTasks(user.data.getTasks));
+      // dispatch(fetchUserSuccess(user.data.user.getUser));
+      // dispatch(fetchProject(user.data.user.getUser.projects));
+      // dispatch(initialTasks(user.data.getTasks));
+      console.log(user)
     }
   };
 
@@ -470,6 +471,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
                     // ":hover": { bgcolor: "secondary.dark" },
                     visibility: dueDate ? "visible" : "hidden",
                   }}
+                  component = "div"
                 >
                   <Close  sx={{color: "secondary.main"}}/>
   
@@ -497,10 +499,10 @@ const projectNames = projectList.map((project:any) => project.projectName);
                 animate={{ opacity: 1, y: "-345px" }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                key = {showCalendar}
+                key = {showCalendar? "show":"hide"}
                 ref={refOne} >
                  {showCalendar && <Calendar 
-                  date={dueDate} onChange={(date:Date)=>setDueDate(date)} 
+                  date={dueDate ?? undefined} onChange={(date:Date)=>setDueDate(date)} 
                   color="#33c6dd"
                   className="calendar"
                   

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProject } from "../features/projectSlice";
 import { initialTasks } from "../features/taskSlice";
+import {GET_USER} from '../graphql/Query'
 import {
   fetchUserFailure,
   fetchUserStart,
@@ -90,34 +91,7 @@ const TaskCard: React.FC<props> = ({
     }
   }
 
-  const GET_USER = gql`
-    query Query($email: String!) {
-      getUser(email: $email) {
-        email
-        projects {
-          projectName
-          tasks {
-            id
-            text
-            completed
-            due
-            priority
-            project
-            checked
-          }
-        }
-      }
-      getTasks(email: $email) {
-        id
-        text
-        completed
-        due
-        priority
-        project
-        checked
-      }
-    }
-  `;
+  
 
   const user = useQuery(GET_USER, {
     variables: { email: currentUser.email },
@@ -130,8 +104,8 @@ const TaskCard: React.FC<props> = ({
       dispatch(fetchUserFailure(user.error));
     }
     if (user.data) {
-      dispatch(fetchUserSuccess(user.data.getUser));
-      dispatch(fetchProject(user.data.getUser.projects));
+      dispatch(fetchUserSuccess(user.data.user.getUser));
+      dispatch(fetchProject(user.data.getUser.user.projects));
       dispatch(initialTasks(user.data.getTasks));
     }
   };

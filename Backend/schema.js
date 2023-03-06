@@ -21,12 +21,24 @@ scalar Date
     email: String!
     projects: [Project]!
   }
+ 
+ type Login {
+    accessToken: String!
+    refreshToken: String!
+    user : User!
+ }
+
+ type refresh {
+    accessToken: String
+ }
 
   type Query {
     getAllUsers: [User]
-    getUser(email: String!): User
+    getUser(email: String!): Login!
     getProjects(email: String!): [Project]
     getTasks(email: String!): [Task]
+    refresh(email:String!,refreshToken: String): refresh
+
   }
 
   type Mutation {
@@ -41,6 +53,7 @@ scalar Date
     createProject(email: String!, projectName: String!): User
     updateProject(email: String!, projectName: String!, newProjectName: String! ): User
     deleteProject(email: String!, projectName: String!): User
+
   }
 
   input TaskInput {

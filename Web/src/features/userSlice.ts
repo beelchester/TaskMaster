@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
+import { isAuthenticated } from '../auth';
 interface UserLoginState {
   name: string;
   email: string;
@@ -10,13 +10,14 @@ interface UserState {
   user : UserLoginState;
 }
 
+
 const initialState: UserState = {
-  login: false,
-  user: {
+  login: isAuthenticated(),
+  user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : {
     name: '',
     email: '',
     picture: ''
-  }
+  } 
 };
 
 export const userSlice = createSlice({

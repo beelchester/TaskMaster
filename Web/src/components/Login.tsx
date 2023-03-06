@@ -85,7 +85,7 @@ const Login = () => {
     size="large"
   onSuccess={credentialResponse => {
     if (credentialResponse.credential) {
-      const decoded = jwt_decode(credentialResponse.credential);
+      const decoded : any = jwt_decode(credentialResponse.credential);
       const user = {
         name: decoded.name,
         email: decoded.email,
@@ -94,6 +94,7 @@ const Login = () => {
       handleCreateUser(user);
       dispatch(setLogin(true))
       dispatch(setUser(user))
+      localStorage.setItem("user", JSON.stringify(user));
     }
   }}
   onError={() => {

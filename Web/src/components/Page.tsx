@@ -185,13 +185,13 @@ const taskClickHandler = (todo: Todo) => {
           ? todos
               .filter(
                 (todo) =>
-                 todo.due&& new Date(todo.due).getDate() === new Date().getDate() && todo.completed === showCompleted
+                 todo.due&& new Date(todo.due).getDate() === (new Date() as any).getDate() && todo.completed === showCompleted
               )
               .sort((a, b) => {
-                return new Date(a.due) - new Date(b.due);
+                return new Date(a.due!).valueOf() - new Date(b.due!).valueOf();
               })
               .sort((a, b) => {
-                const priorityValues = {
+                const priorityValues: { [key: string]: number } = {
                   P1: 1,
                   P2: 2,
                   P3: 3
@@ -206,7 +206,7 @@ const taskClickHandler = (todo: Todo) => {
                     return projectNameComparison;
                   }
                 }
-                  return ; 
+                  return 0; 
               })
               .map((todo: Todo, index) => (
                 <TaskCard
@@ -232,11 +232,11 @@ const taskClickHandler = (todo: Todo) => {
                 } else if (!b.due) {
                   return -1;
                 } else {
-                  return new Date(a.due) - new Date(b.due);
+                  return new Date(a.due!).valueOf() - new Date(b.due!).valueOf();
                 }
               })
               .sort((a, b) => {
-                const priorityValues = {
+                const priorityValues: { [key: string]: number } = {
                   P1: 1,
                   P2: 2,
                   P3: 3
@@ -251,7 +251,7 @@ const taskClickHandler = (todo: Todo) => {
                     return projectNameComparison;
                   }
                 }
-                  return ; 
+                  return 0 ; 
               })
               .map((todo: Todo, index) => (
                 <TaskCard
@@ -279,11 +279,11 @@ const taskClickHandler = (todo: Todo) => {
                 } else if (!b.due) {
                   return -1;
                 } else {
-                  return new Date(a.due) - new Date(b.due);
+                  return new Date(a.due).valueOf() - new Date(b.due).valueOf();
                 }
               })
               .sort((a, b) => {
-                const priorityValues = {
+                const priorityValues: { [key: string]: number } = {
                   P1: 1,
                   P2: 2,
                   P3: 3
@@ -298,7 +298,7 @@ const taskClickHandler = (todo: Todo) => {
                     return projectNameComparison;
                   }
                 }
-                  return ; 
+                  return 0; 
               })
               .map((todo: Todo, index) => (
                 <TaskCard

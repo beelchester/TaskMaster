@@ -45,9 +45,12 @@ const currentUser = useSelector((state: any) => state.user.user);
       return
     }
     if (user.data) {
-      dispatch(fetchUserSuccess(user.data.getUser));
-      dispatch(fetchProject(user.data.getUser.projects));
+      dispatch(fetchUserSuccess(user.data.getUser.user));
+      dispatch(fetchProject(user.data.getUser.user.projects));
       dispatch(initialTasks(user.data.getTasks));
+      console.log(user.data.getUser.accessToken)
+    localStorage.setItem("accessToken", user.data.getUser.accessToken);
+    localStorage.setItem("refreshToken", user.data.getUser.refreshToken);
     }
   };
   const dispatch = useDispatch();
@@ -76,10 +79,10 @@ const currentUser = useSelector((state: any) => state.user.user);
 
   const [selectProject, setSelectProject] = useState(null);
 
-  const refOne = useRef(null);
+  const refOne = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
-    function handleClickOutside(event) {
+    function handleClickOutside(event : any) {
       if (refOne.current && !refOne.current.contains(event.target)) {
         setEditProjectMenu(null);
         setHoveredIndex2(null);
@@ -131,7 +134,7 @@ const currentUser = useSelector((state: any) => state.user.user);
         </Typography>
 
         <List sx={{ marginTop: "2rem", marginBottom: "1rem" }}>
-          {["Today", "Upcoming"].map((text, index) => {
+          {["Today", "Upcoming"].map((text, index:any) => {
             return (
               <ListItem key={text} disablePadding>
                 <ListItemButton
@@ -165,7 +168,7 @@ const currentUser = useSelector((state: any) => state.user.user);
           Projects
         </Typography>
         <List>
-          {projects.map((project: any, index) => {
+          {projects.map((project: any, index : any) => {
             const isHovered = hoveredIndex2 === index;
             const isClicked = editProjectMenu === index;
             return (
