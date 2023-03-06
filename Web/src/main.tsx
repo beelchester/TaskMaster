@@ -1,5 +1,4 @@
 import React from 'react'
-import dotenv from 'dotenv'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
@@ -8,8 +7,10 @@ import {store} from './app/store';
 import {ApolloClient,InMemoryCache,ApolloProvider} from '@apollo/client'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
+
 const client = new ApolloClient({
-    uri: process.env.APOLLO_URI,
+    uri: import.meta.env.VITE_APOLLO_URI,
+    // uri: 'http://localhost:4000/graphql',
     cache: new InMemoryCache()
 })
 
