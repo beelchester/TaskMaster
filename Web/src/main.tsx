@@ -1,4 +1,6 @@
 import React from "react";
+import dotenv from "dotenv";
+dotenv.config();
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
@@ -8,7 +10,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const client = new ApolloClient({
-  uri: import.meta.env.VITE_APOLLO_URI,
+  uri: process.env.VITE_APOLLO_URI,
   cache: new InMemoryCache(),
 });
 
