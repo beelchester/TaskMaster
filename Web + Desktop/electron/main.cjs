@@ -4,13 +4,13 @@ require ('@electron/remote/main').initialize()
 function createWindow(){
   console.log("createWindow")
   const win = new BrowserWindow({
-    width: 1366,
-    height: 768,
+    width: 1400,
+    height: 800,
     webPreferences: {
       enableRemoteModule: true,
     }
   })
-  win.loadURL('http://localhost:5173')
+  win.loadURL('https://taskmaster0.netlify.app/')
 }
 app.on('ready', createWindow)
 
