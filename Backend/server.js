@@ -34,7 +34,7 @@ async function startServer() {
  
   app.use(
     cors({
-      origin: "https://taskmaster0.netlify.app",
+      origin: ["https://taskmaster0.netlify.app", "https://play.google.com"],
       optionsSuccessStatus: 200,
     })
   );
