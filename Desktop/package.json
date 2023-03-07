@@ -1,0 +1,19 @@
+{
+  "name": "TaskMaster",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "main": "main.cjs",
+  "homepage": "./",
+  "scripts": {
+    "build": "electron ./main.cjs"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.0.9"
+    
+  },
+  "devDependencies": {
+    "electron-packager": "^17.1.1",
+    "electron": "^23.1.2"
+  }
+}

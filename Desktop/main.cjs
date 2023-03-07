@@ -8,7 +8,10 @@ function createWindow(){
     height: 800,
     webPreferences: {
       enableRemoteModule: true,
-    }
+    },
+    title: "TaskMaster",
+    icon:"./T.png"
+
   })
   win.loadURL('https://taskmaster0.netlify.app/')
 }
