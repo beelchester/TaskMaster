@@ -18,9 +18,9 @@ const client = new ApolloClient({
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <ApolloProvider client={client}>
     <Provider store={store}>
-      {/* <GoogleOAuthProvider clientId="675091325788-79tn0tlaoj9oeuoprlghf2tfvntbggju.apps.googleusercontent.com"> */}
+      <GoogleOAuthProvider clientId="675091325788-79tn0tlaoj9oeuoprlghf2tfvntbggju.apps.googleusercontent.com">
         <App />
-      {/* </GoogleOAuthProvider> */}
+      </GoogleOAuthProvider>
     </Provider>
   </ApolloProvider>
 );
