@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "taskmaster-mobile",
-    "slug": "taskmaster-mobile",
+    "name": "TaskMaster",
+    "slug": "TaskMaster",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
