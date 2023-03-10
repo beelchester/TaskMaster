@@ -1,9 +1,11 @@
 import { StyleSheet, View, Text, FlatList } from "react-native";
 import { ListItem, CheckBox } from "@rneui/base";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 export default function Page() {
   const [checked, setChecked] = useState(true);
   const toggleCheckbox = () => setChecked(!checked);
+  const currentPage = useSelector((state) => state.page.currentPage);
   const DATA = [
     {
       id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -18,52 +20,32 @@ export default function Page() {
       title: "Third Item",
     },
     {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
+      id:"c1b1-46c2-aed5-3ad53abb28ba",
+      title: "Fourth Item",
     },
     {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
+      id:"c605-48d3-a4f8-fbd91aa97f63",
+      title: "Fifth Item",
     },
     {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
+      id:"3da1-471f-bd96-145571e29d72",
+      title: "Sixth Item",
     },
     {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
+      id:"c1c1-46c2-aed5-3ad53abb28ba",
+      title: "Seventh Item",
     },
     {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
+      id:"c625-48d3-a4fd-fbd91aa97f63",
+      title: "Eighth Item",
     },
     {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
+      id:"3ba1-471f-bd96-145571e29d72",
+      title: "Ninth Item",
     },
     {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
+      id:"d1b1-46c2-aed5-3aa53abb28ba",
+      title: "Tenth Item",
     },
   ];
   const Item = ({ title }) => (
@@ -94,11 +76,11 @@ export default function Page() {
   return (
     <View style={styles.container}>
       <View style={styles.top}>
-        <Text style={styles.heading}>Today</Text>
+        <Text style={styles.heading}>{currentPage}</Text>
       </View>
       <FlatList
         data={DATA}
-        renderItem={({ item }) => <Item title={item.title} />}
+        renderItem={({ item,index}) => <Item title={item.title} index={index} />}
         keyExtractor={(item) => item.id}
         style={styles.list}
       />
@@ -112,11 +94,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgb(28, 28, 28)",
     position: "relative",
-    paddingTop: 130,
+    paddingTop: 110,
+    paddingBottom: 30,
   },
   top: {
     position: "absolute",
-    paddingTop: 70,
+    paddingTop: 50,
     paddingHorizontal: 20,
     top: 0,
     // backgroundColor: "red",
@@ -135,7 +118,7 @@ const styles = StyleSheet.create({
   },
   item: {
     height: 70,
-    marginBottom: 10,
+    marginBottom: 20,
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
@@ -157,13 +140,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    marginRight: 10,
     // backgroundColor: "green",
   },
   priority: {
     fontWeight: "bold",
     color: "yellow",
     marginBottom: 7,
-    
   },
   project: {
     // fontWeight: "bold",
@@ -181,6 +164,5 @@ const styles = StyleSheet.create({
   due: {
     color: "white",
     marginLeft: 5,
-    display:"inline"
   },
 });
