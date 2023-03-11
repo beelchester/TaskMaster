@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native'
 import { Icon } from '@rneui/base'
 import { useDispatch, useSelector } from 'react-redux'
-import { changePage } from '../../features/pageSlice'
+import { changePage } from '../features/pageSlice'
 
 const TabButton = ({title}) => {
   const dispatch = useDispatch()
