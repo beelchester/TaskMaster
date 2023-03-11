@@ -1,5 +1,12 @@
-import { StyleSheet, View, Text, FlatList } from "react-native";
-import { ListItem, CheckBox } from "@rneui/base";
+import {
+  Image,
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
+import { ListItem, CheckBox, Icon } from "@rneui/base";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 export default function Page() {
@@ -40,60 +47,108 @@ export default function Page() {
     let rest = dateStr.slice(3);
     return day + "," + rest;
   }
+  const [showCompleted, setShowCompleted] = useState(false);
+  const [showText, setShowText] = useState("Show Completed");
+  function handleClickCompleted() {
+    setShowCompleted(!showCompleted);
+    setShowText(showCompleted ? "Show Completed" : "Show Uncompleted");
+  }
 
-  const Item = ({ title, priority, due, project, completed }) =>
-  { const [check, setCheck] = useState(completed);
+  const Item = ({ title, priority, due, project, completed }) => {
+    const [check, setCheck] = useState(completed);
     return (
-    <View style={styles.item}>
-      <View style={styles.checkboxContainer} onTouchEnd={toggleCheckbox}>
-        <CheckBox
-          checked={check}
-          iconType="material-community"
-          checkedIcon="checkbox-marked"
-          uncheckedIcon="checkbox-blank-outline"
-          checkedColor="#33c6dd"
-          containerStyle={{ padding: 0, width: 0 }}
-        />
+      <View style={styles.item}>
+        <View style={styles.checkboxContainer} onTouchEnd={toggleCheckbox}>
+          <CheckBox
+            checked={check}
+            iconType="material-community"
+            checkedIcon="checkbox-marked"
+            uncheckedIcon="checkbox-blank-outline"
+            checkedColor="#33c6dd"
+            containerStyle={{ padding: 0, width: 0 }}
+          />
+        </View>
+        <Text style={styles.title}>{title}</Text>
+        <View style={styles.projectContainer}>
+          {/* <View style={styles.dueContainer}> */}
+
+          <Text
+            style={{
+              fontWeight: "bold",
+              color:
+                priority === "P1"
+                  ? "rgba(255, 207, 0, 1)"
+                  : priority === "P2"
+                  ? "rgba(102, 150, 255, 1)"
+                  : priority === "P3"
+                  ? "rgba(255, 102, 204, 1)"
+                  : "rgba(255, 255, 255, 1)",
+              marginBottom: 7,
+            }}
+          >
+            {priority}
+            <Text style={styles.due}> {listDateHandler(due)}</Text>
+          </Text>
+          {/* </View> */}
+          <Text style={styles.project}>{project}</Text>
+        </View>
       </View>
-      <Text style={styles.title}>{title}</Text>
-      <View style={styles.projectContainer}>
-        {/* <View style={styles.dueContainer}> */}
-        
-        <Text style={{fontWeight: "bold",
-    color: priority === "P1"
-    ? "rgba(255, 207, 0, 1)"
-    : priority === "P2"
-    ? "rgba(102, 150, 255, 1)"
-    : priority === "P3"
-    ? "rgba(255, 102, 204, 1)"
-    : "rgba(255, 255, 255, 1)",
-    marginBottom: 7,}}>{priority}
-        <Text style={styles.due}>  {listDateHandler(due)}</Text>
-        </Text>
-        {/* </View> */}
-        <Text style={styles.project}>{project}</Text>
-      </View>
-    </View>
-  );}
-  
-    useEffect (() => {
-     todos !== undefined && page === "Today"
-    ? setData( 
-    todos
-        .filter(
-          (todo) =>
-           todo.due&& new Date(todo.due).getDate() === new Date().getDate() 
+    );
+  };
+
+  useEffect(() => {
+    todos !== undefined && page === "Today"
+      ? setData(
+          todos
+            .filter(
+              (todo) =>
+                todo.due &&
+                new Date(todo.due).getDate() === new Date().getDate() &&
+                todo.completed === showCompleted
+            )
+            .sort((a, b) => {
+              return new Date(a.due).valueOf() - new Date(b.due).valueOf();
+            })
+            .sort((a, b) => {
+              const priorityValues = {
+                P1: 1,
+                P2: 2,
+                P3: 3,
+              };
+
+              // if (sort == '1') {
+              //   return priorityValues[a.priority] - priorityValues[b.priority];
+              // }
+              // else if (sort == '3') {
+              //   const projectNameComparison = a.project.localeCompare(b.project);
+              //   if (projectNameComparison !== 0) {
+              //     return projectNameComparison;
+              //   }
+              // }
+              return 0;
+            })
         )
-        .sort((a, b) => {
-          return new Date(a.due).valueOf() - new Date(b.due).valueOf();
-        })
-        .sort((a, b) => {
-          const priorityValues = {
-            P1: 1,
-            P2: 2,
-            P3: 3
-          };
-        
+      : todos !== undefined && page === "Upcoming"
+      ? setData(
+          todos.filter((todo) => todo.completed === showCompleted)
+          // .sort((a, b) => {
+          //   if (!a.due && !b.due) {
+          //     return 0;
+          //   } else if (!a.due) {
+          //     return 1;
+          //   } else if (!b.due) {
+          //     return -1;
+          //   } else {
+          //     return new Date(a.due).valueOf() - new Date(b.due).valueOf();
+          //   }
+          // })
+          // .sort((a, b) => {
+          //   const priorityValues = {
+          //     P1: 1,
+          //     P2: 2,
+          //     P3: 3
+          //   };
+
           // if (sort == '1') {
           //   return priorityValues[a.priority] - priorityValues[b.priority];
           // }
@@ -103,88 +158,98 @@ export default function Page() {
           //     return projectNameComparison;
           //   }
           // }
-            return 0; 
-        })):
-        todos !== undefined && page === "Upcoming"
-          ? setData( todos
-              // .filter((todo) => todo.completed === showCompleted)   
-              // .sort((a, b) => {
-              //   if (!a.due && !b.due) {
-              //     return 0;
-              //   } else if (!a.due) {
-              //     return 1;
-              //   } else if (!b.due) {
-              //     return -1;
-              //   } else {
-              //     return new Date(a.due).valueOf() - new Date(b.due).valueOf();
+          // return 0 ;
+          // })
+        )
+      : todos !== undefined &&
+        setData(
+          todos
+            .filter(
+              (todo) =>
+                todo.project === page && todo.completed === showCompleted
+            )
+            .sort((a, b) => {
+              if (!a.due && !b.due) {
+                return 0;
+              } else if (!a.due) {
+                return 1;
+              } else if (!b.due) {
+                return -1;
+              } else {
+                return new Date(a.due).valueOf() - new Date(b.due).valueOf();
+              }
+            })
+            .sort((a, b) => {
+              const priorityValues = {
+                P1: 1,
+                P2: 2,
+                P3: 3,
+              };
+
+              // if (sort == '1') {
+              //   return priorityValues[a.priority] - priorityValues[b.priority];
+              // }
+              // else if (sort == '3') {
+              //   const projectNameComparison = a.project.localeCompare(b.project);
+              //   if (projectNameComparison !== 0) {
+              //     return projectNameComparison;
               //   }
-              // })
-              // .sort((a, b) => {
-              //   const priorityValues = {
-              //     P1: 1,
-              //     P2: 2,
-              //     P3: 3
-              //   };
-              
-                // if (sort == '1') {
-                //   return priorityValues[a.priority] - priorityValues[b.priority];
-                // }
-                // else if (sort == '3') {
-                //   const projectNameComparison = a.project.localeCompare(b.project);
-                //   if (projectNameComparison !== 0) {
-                //     return projectNameComparison;
-                //   }
-                // }
-                  // return 0 ; 
-              // })
-              ): todos !== undefined &&
-    setData( todos .filter(
-      (todo) =>
-        todo.project === page 
-    )
-    .sort((a, b) => {
-      if (!a.due && !b.due) {
-        return 0;
-      } else if (!a.due) {
-        return 1;
-      } else if (!b.due) {
-        return -1;
-      } else {
-        return new Date(a.due).valueOf() - new Date(b.due).valueOf();
-      }
-    })
-    .sort((a, b) => {
-      const priorityValues = {
-        P1: 1,
-        P2: 2,
-        P3: 3
-      };
-    
-      // if (sort == '1') {
-      //   return priorityValues[a.priority] - priorityValues[b.priority];
-      // }
-      // else if (sort == '3') {
-      //   const projectNameComparison = a.project.localeCompare(b.project);
-      //   if (projectNameComparison !== 0) {
-      //     return projectNameComparison;
-      //   }
-      // }
-        return 0; 
-    })) 
+              // }
+              return 0;
+            })
+        );
+  }, [page, showCompleted]);
+
+  useEffect(() => {
+    setShowCompleted(false);
   }, [page]);
-    
   return (
     <View style={styles.container}>
       <View style={styles.top}>
         <Text style={styles.heading}>{page}</Text>
+        <TouchableOpacity onPress={handleClickCompleted} activeOpacity={0.6}
+        style={{paddingTop:7,paddingRight:8,
+        }}
+        >
+          {/* <Text style={{color:'white',fontSize:24}}>{showText}</Text> */}
+          <View style={{
+            backgroundColor : showCompleted ? "rgba(20, 20, 20, 1)" : "transparent",
+            borderRadius: 50,
+            width: 38,
+            height: 38,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingLeft: 1,
+          }}>
+          <Image
+            source={require("../../assets/baseline_task_white_24dp.png")}
+            style={{
+              width: 24,
+              height: 24,
+              tintColor: showCompleted
+                ? "rgba(255, 255, 255, 1)"
+                : "rgba(255, 255, 255, 0.5)",
+                flexDirection: "row",
+              }
+          }
+          />
+          </View>
+        </TouchableOpacity>
       </View>
       <FlatList
         data={data}
-        renderItem={({ item,index}) => <Item title={item.text}  priority={item.priority} due={item.due} project={item.project} completed = {item.completed} />}
+        renderItem={({ item, index }) => (
+          <Item
+            title={item.text}
+            priority={item.priority}
+            due={item.due}
+            project={item.project}
+            completed={item.completed}
+          />
+        )}
         keyExtractor={(item) => item.id}
         style={styles.list}
       />
-     
     </View>
   );
 }
@@ -206,6 +271,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(28, 28, 28)",
     width: "100%",
     height: 130,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   heading: {
     fontSize: 40,
@@ -243,7 +310,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     // backgroundColor: "green",
   },
-  
+
   project: {
     // fontWeight: "bold",
     color: "white",
