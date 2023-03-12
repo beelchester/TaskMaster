@@ -1,3 +1,4 @@
+import {APOLLO_URI} from '@env';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Drawer from './Drawer';
@@ -6,9 +7,8 @@ import { store } from "./src/app/store";
 import { Provider, useDispatch, useSelector } from "react-redux";
 export default function App() {
   const client = new ApolloClient({
-    // uri: process.env.VITE_APOLLO_URI,
-    uri: "http://localhost:4000/graphql",
-    // uri :"https://taskmaster-production-70b1.up.railway.app/graphql",
+    uri: APOLLO_URI,
+    // uri: "http://localhost:4000/graphql",
     cache: new InMemoryCache(),
   });
   return (

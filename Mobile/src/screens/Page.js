@@ -9,7 +9,7 @@ import {
 import { ListItem, CheckBox, Icon } from "@rneui/base";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-export default function Page() {
+export default function Page({sort}) {
   const toggleCheckbox = () => setChecked(!checked);
   const page = useSelector((state) => state.page.currentPage);
   const dispatch = useDispatch();
@@ -87,7 +87,19 @@ export default function Page() {
             }}
           >
             {priority}
-            <Text style={styles.due}> {listDateHandler(due)}</Text>
+            <Text style={{
+    marginLeft: 5,
+    color:
+                    due &&
+                    new Date(due).getDate() === new Date().getDate() &&
+                    new Date(due).getMonth() === new Date().getMonth() &&
+                    new Date(due).getFullYear() ===
+                      new Date().getFullYear()
+                      ? "#33c6dd"
+                      : due && new Date(due) < new Date()
+                      ? "rgba(255, 41, 55, 1)"
+                      : "rgba(255, 255, 255, 1)",
+    }}> {listDateHandler(due)}</Text>
           </Text>
           {/* </View> */}
           <Text style={styles.project}>{project}</Text>
@@ -116,50 +128,50 @@ export default function Page() {
                 P3: 3,
               };
 
-              // if (sort == '1') {
-              //   return priorityValues[a.priority] - priorityValues[b.priority];
-              // }
-              // else if (sort == '3') {
-              //   const projectNameComparison = a.project.localeCompare(b.project);
-              //   if (projectNameComparison !== 0) {
-              //     return projectNameComparison;
-              //   }
-              // }
+              if (sort == '1') {
+                return priorityValues[a.priority] - priorityValues[b.priority];
+              }
+              else if (sort == '3') {
+                const projectNameComparison = a.project.localeCompare(b.project);
+                if (projectNameComparison !== 0) {
+                  return projectNameComparison;
+                }
+              }
               return 0;
             })
         )
       : todos !== undefined && page === "Upcoming"
       ? setData(
           todos.filter((todo) => todo.completed === showCompleted)
-          // .sort((a, b) => {
-          //   if (!a.due && !b.due) {
-          //     return 0;
-          //   } else if (!a.due) {
-          //     return 1;
-          //   } else if (!b.due) {
-          //     return -1;
-          //   } else {
-          //     return new Date(a.due).valueOf() - new Date(b.due).valueOf();
-          //   }
-          // })
-          // .sort((a, b) => {
-          //   const priorityValues = {
-          //     P1: 1,
-          //     P2: 2,
-          //     P3: 3
-          //   };
+          .sort((a, b) => {
+            if (!a.due && !b.due) {
+              return 0;
+            } else if (!a.due) {
+              return 1;
+            } else if (!b.due) {
+              return -1;
+            } else {
+              return new Date(a.due).valueOf() - new Date(b.due).valueOf();
+            }
+          })
+          .sort((a, b) => {
+            const priorityValues = {
+              P1: 1,
+              P2: 2,
+              P3: 3
+            };
 
-          // if (sort == '1') {
-          //   return priorityValues[a.priority] - priorityValues[b.priority];
-          // }
-          // else if (sort == '3') {
-          //   const projectNameComparison = a.project.localeCompare(b.project);
-          //   if (projectNameComparison !== 0) {
-          //     return projectNameComparison;
-          //   }
-          // }
-          // return 0 ;
-          // })
+          if (sort == '1') {
+            return priorityValues[a.priority] - priorityValues[b.priority];
+          }
+          else if (sort == '3') {
+            const projectNameComparison = a.project.localeCompare(b.project);
+            if (projectNameComparison !== 0) {
+              return projectNameComparison;
+            }
+          }
+          return 0 ;
+          })
         )
       : todos !== undefined &&
         setData(
@@ -186,19 +198,19 @@ export default function Page() {
                 P3: 3,
               };
 
-              // if (sort == '1') {
-              //   return priorityValues[a.priority] - priorityValues[b.priority];
-              // }
-              // else if (sort == '3') {
-              //   const projectNameComparison = a.project.localeCompare(b.project);
-              //   if (projectNameComparison !== 0) {
-              //     return projectNameComparison;
-              //   }
-              // }
+              if (sort == '1') {
+                return priorityValues[a.priority] - priorityValues[b.priority];
+              }
+              else if (sort == '3') {
+                const projectNameComparison = a.project.localeCompare(b.project);
+                if (projectNameComparison !== 0) {
+                  return projectNameComparison;
+                }
+              }
               return 0;
             })
         );
-  }, [page, showCompleted]);
+  }, [page, showCompleted, sort]);
 
   useEffect(() => {
     setShowCompleted(false);
@@ -208,7 +220,7 @@ export default function Page() {
       <View style={styles.top}>
         <Text style={styles.heading}>{page}</Text>
         <TouchableOpacity onPress={handleClickCompleted} activeOpacity={0.6}
-        style={{paddingTop:7,paddingRight:8,
+        style={{paddingTop:9,paddingRight:8,
         }}
         >
           {/* <Text style={{color:'white',fontSize:24}}>{showText}</Text> */}
@@ -325,8 +337,5 @@ const styles = StyleSheet.create({
     // backgroundColor:"red",
     padding: 0,
   },
-  due: {
-    color: "white",
-    marginLeft: 5,
-  },
+ 
 });
