@@ -7,8 +7,8 @@ import { store } from "./src/app/store";
 import { Provider, useDispatch, useSelector } from "react-redux";
 export default function App() {
   const client = new ApolloClient({
-    uri: APOLLO_URI,
-    // uri: "http://localhost:4000/graphql",
+    // uri: APOLLO_URI,
+    uri: "http://localhost:4000/graphql",
     cache: new InMemoryCache(),
   });
   return (

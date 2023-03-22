@@ -9,7 +9,8 @@ import {
 import { ListItem, CheckBox, Icon } from "@rneui/base";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-export default function Page({sort}) {
+import AddTask from "../modal/AddTask";
+export default function Page({sort,fetchUser}) {
   const toggleCheckbox = () => setChecked(!checked);
   const page = useSelector((state) => state.page.currentPage);
   const dispatch = useDispatch();
@@ -54,10 +55,20 @@ export default function Page({sort}) {
     setShowText(showCompleted ? "Show Completed" : "Show Uncompleted");
   }
 
-  const Item = ({ title, priority, due, project, completed }) => {
+  const Item = ({ id, title, priority, due, project, completed }) => {
     const [check, setCheck] = useState(completed);
+      const task = {
+          id,
+        text: title,
+        priority,
+        project,
+        due ,
+        checked: check,
+        completed ,
+      }
+      const [showEditTask, setShowEditTask] = useState(false);
     return (
-      <View style={styles.item}>
+      <TouchableOpacity onPress={()=>setShowEditTask(true)} style={styles.item}>
         <View style={styles.checkboxContainer} onTouchEnd={toggleCheckbox}>
           <CheckBox
             checked={check}
@@ -104,7 +115,13 @@ export default function Page({sort}) {
           {/* </View> */}
           <Text style={styles.project}>{project}</Text>
         </View>
-      </View>
+        <AddTask mode={"edit"}
+        showAddTask={showEditTask}
+        setShowAddTask={setShowEditTask}
+        currentTask={task}
+        fetchUser = {fetchUser}
+        />
+      </TouchableOpacity>
     );
   };
 
@@ -252,6 +269,8 @@ export default function Page({sort}) {
         data={data}
         renderItem={({ item, index }) => (
           <Item
+            onPress={() => { console.log(item)}}
+            id={item.id}
             title={item.text}
             priority={item.priority}
             due={item.due}
