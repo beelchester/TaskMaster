@@ -324,7 +324,6 @@ export default function Drawer() {
                 showAddTask={showAddTask}
                 setShowAddTask={setShowAddTask}
                 mode={'add'}
-                fetchUser={fetchUser}
             />
 
             <StatusBar style="auto" />

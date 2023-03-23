@@ -119,7 +119,6 @@ export default function Page({sort,fetchUser}) {
         showAddTask={showEditTask}
         setShowAddTask={setShowEditTask}
         currentTask={task}
-        fetchUser = {fetchUser}
         />
       </TouchableOpacity>
     );

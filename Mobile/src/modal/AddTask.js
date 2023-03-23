@@ -18,7 +18,7 @@ import { initialTasks } from "../features/taskSlice";
 import { fetchProject } from "../features/projectSlice";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-const AddTask = ({showAddTask,setShowAddTask,mode,currentTask,fetchUser}) => {
+const AddTask = ({showAddTask,setShowAddTask,mode,currentTask}) => {
   const projects = useSelector((state) => state.project.projects);
   const [taskName, setTaskName] = useState("");
   const [priority, setPriority] = useState("P1");
@@ -54,12 +54,13 @@ const [priorityItems, setPriorityItems] = useState([
 
 const [projectOpen, setProjectOpen] = useState(false);
 const [projectValue, setProjectValue] = useState(mode === "edit" ? currentTask.project : "Inbox");
-const [projectItems, setProjectItems] = useState(
- projects.map((p) => {
-   // return project.projectName
-   return { label: p.projectName, value: p.projectName };
- })
-);
+const [projectItems, setProjectItems] = useState([]);
+useEffect(() => {
+projects.map((p) => {
+    let a = { label: p.projectName, value: p.projectName };
+    setProjectItems((prev) => [...prev, a]);
+});
+}, [projects]);
 const [showCalendar, setShowCalendar] = useState(false);
 const [calendarText, setCalendarText] = useState("Due Date");
 
@@ -67,7 +68,6 @@ const onDateChange = (date) => {
  const currentDate = date || dueDate;
 setShowCalendar(false)
  setDueDate(currentDate);
-console.log(dueDate)
  let tempDate = new Date(currentDate);
  let fDate =
    tempDate.getDate() +
@@ -85,6 +85,27 @@ console.log(dueDate)
   useEffect(() => {
     fetchUser();
   }, [user]);
+
+    const fetchUser = () => {
+        if (user.loading) {
+            dispatch(fetchUserStart());
+        }
+        if (user.error) {
+            dispatch(fetchUserFailure(user.error));
+            return user.error;
+        }
+        if (user.data) {
+            dispatch(fetchUserSuccess(user.data.getUser.user));
+            // console.log(user.data.getUser.user)
+            dispatch(fetchProject(user.data.getUser.user.projects));
+            dispatch(initialTasks(user.data.getTasks));
+            // console.log(user.data.getTasks)
+            //   console.log(user.data.getUser.accessToken)
+            // localStorage.setItem("accessToken", user.data.getUser.accessToken);
+            // localStorage.setItem("refreshToken", user.data.getUser.refreshToken);
+        }
+    };
+
 
   const [createTask] = useMutation(CREATE_TASK)
   const handleCreateTask = (task) => {
@@ -137,6 +158,8 @@ console.log(dueDate)
   
     function closeHandler() {
       setShowAddTask(false);
+        setProjectOpen(false);
+        setPriorityOpen(false);
       setTaskName("");
       setPriority("P1");
       setProject("Inbox");
