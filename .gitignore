@@ -26,3 +26,4 @@ yarn.lock
 .env
 Backend/.env
 release-builds
+.expo

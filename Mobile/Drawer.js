@@ -29,6 +29,7 @@ import { fetchProject } from "./src/features/projectSlice";
 import { CheckBox } from "@rneui/base";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import AddProject from "./src/modal/AddProject";
 export default function Drawer() {
     const page = useSelector((state) => state.page.currentPage);
     const offsetValue = useRef(new Animated.Value(0)).current;
@@ -37,10 +38,10 @@ export default function Drawer() {
     const [showMenu, setShowMenu] = useState(false);
     const [showSort, setShowSort] = useState(false);
     const [showAddTask, setShowAddTask] = useState(false);
+    const [showAddProject, setShowAddProject] = useState(false);
     const [sort, setSort] = useState("1");
 
     const projects = useSelector((state) => state.project.projects);
-
 
 
     const dispatch = useDispatch();
@@ -49,7 +50,7 @@ export default function Drawer() {
     });
     useEffect(() => {
         fetchUser();
-    }, [user]);
+    }, [user,projects]);
 
     const fetchUser = () => {
         if (user.loading) {
@@ -96,7 +97,6 @@ export default function Drawer() {
                 }}
             >
                 Sahil Yeole
-                {/* {store.getState().page.currentPage} */}
             </Text>
             <TabButton title="Today" />
             <TabButton title="Upcoming" />
@@ -123,11 +123,12 @@ export default function Drawer() {
         <TabButton title="Music" /> */}
             <FlatList
                 data={projects}
-                renderItem={({ item }) => <TabButton title={item.projectName} />}
+                renderItem={({ item }) => <TabButton  title={item.projectName} />}
                 keyExtractor={(item) => item.projectName}
                 style={{ height: 20 }}
             />
             <TouchableOpacity
+        onPress={() => setShowAddProject(true)}
                 activeOpacity={0.6}
                 style={{
                     borderRadius: 8,
@@ -149,7 +150,7 @@ export default function Drawer() {
                     Add Project
                 </Text>
             </TouchableOpacity>
-
+<AddProject  showAddProject={showAddProject} setShowAddProject={setShowAddProject} />
             <Divider
                 color="rgba(100, 100, 100, 1)"
                 style={{ width: 170, marginTop: 10 }}

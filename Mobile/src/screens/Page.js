@@ -67,6 +67,7 @@ export default function Page({sort,fetchUser}) {
         completed ,
       }
       const [showEditTask, setShowEditTask] = useState(false);
+
     return (
       <TouchableOpacity onPress={()=>setShowEditTask(true)} style={styles.item}>
         <View style={styles.checkboxContainer} onTouchEnd={toggleCheckbox}>
@@ -226,7 +227,7 @@ export default function Page({sort,fetchUser}) {
               return 0;
             })
         );
-  }, [page, showCompleted, sort]);
+  }, [page, showCompleted, sort, todos]);
 
   useEffect(() => {
     setShowCompleted(false);
@@ -268,7 +269,6 @@ export default function Page({sort,fetchUser}) {
         data={data}
         renderItem={({ item, index }) => (
           <Item
-            onPress={() => { console.log(item)}}
             id={item.id}
             title={item.text}
             priority={item.priority}
