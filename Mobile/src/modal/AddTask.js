@@ -2,13 +2,15 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
+    View,
 } from "react-native";
 import { Overlay, Input } from "@rneui/themed";
+import { Icon } from "@rneui/base";
 import React, { useState,  useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery ,useMutation} from "@apollo/client";
 import { GET_USER } from "../graphql/Query";
-import {CREATE_TASK, UPDATE_TASK} from '../graphql/TaskMutations'
+import {CREATE_TASK, UPDATE_TASK,DELETE_TASK} from '../graphql/TaskMutations'
 import {
   fetchUserFailure,
   fetchUserStart,
@@ -139,6 +141,23 @@ setShowCalendar(false)
         fetchUser();
       });
     };
+     const [deleteTask] = useMutation(DELETE_TASK);
+  const handleDeleteTask = (task) => {
+    deleteTask({
+      variables: {
+        email: "sahilyeole93@gmail.com",
+        projectName: task.project,
+        taskId: task.id,
+      },
+      refetchQueries: [
+        { query: GET_USER, variables: { email: "sahilyeole93@gmail.com" } },
+      ],
+    }).then(() => {
+      
+      fetchUser();
+    });
+  };
+ 
       function submitTask() {
       if (taskName.trim().length === 0) return;
       if (mode === "edit") {
@@ -165,6 +184,14 @@ setShowCalendar(false)
       setProject("Inbox");
       setDueDate(new Date());
     }
+function deleteTaskHandler() {
+    handleDeleteTask(currentTask);
+    setShowAddTask(false);
+    setTaskName("");
+    setPriority("P1");
+    setProject("Inbox");
+    setDueDate(new Date());
+  }
   return (
     <Overlay
     isVisible={showAddTask}
@@ -243,12 +270,29 @@ setShowCalendar(false)
         />
     )
   }
-<TouchableOpacity onPress={submitTask} style={{backgroundColor:"#33c6dd", width:80,
+         <View style={{
+          flexDirection:'row',
+            alignItems:'center',
+              justifyContent:'space-between',
+      }}>
+<TouchableOpacity onPress={submitTask}  style={{backgroundColor:"#33c6dd", width:80,
 height:40, borderRadius:5, justifyContent:'center', alignItems:'center', marginTop:20
 }}  activeOpacity={0.6} >
 <Text style={{color:'black',fontWeight:'bold',}}> {mode =="edit" ? "Edit" : "Add"}
 </Text>
-  </TouchableOpacity>
+    </TouchableOpacity>
+
+    {
+    mode === "edit" &&
+        <TouchableOpacity onPress={deleteTaskHandler} >
+    <Icon name="delete" size={30} color="white" style={{
+        marginTop:13,
+            marginRight:10
+    }}/>
+    </TouchableOpacity>
+    }
+</View>
+ 
   </Overlay>
   )
 }
