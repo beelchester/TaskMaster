@@ -2,6 +2,7 @@ import {
   Image,
   StyleSheet,
   View,
+    Dimensions,
   Text,
   FlatList,
   TouchableOpacity,
@@ -81,8 +82,8 @@ export default function Page({sort,fetchUser}) {
           />
         </View>
         <Text style={styles.title}>{title}</Text>
+       
         <View style={styles.projectContainer}>
-          {/* <View style={styles.dueContainer}> */}
 
           <Text
             style={{
@@ -95,12 +96,13 @@ export default function Page({sort,fetchUser}) {
                   : priority === "P3"
                   ? "rgba(255, 102, 204, 1)"
                   : "rgba(255, 255, 255, 1)",
-              marginBottom: 7,
+                  marginBottom: due? 1:2
             }}
           >
             {priority}
-            <Text style={{
-    marginLeft: 5,
+          </Text>
+        {due&&<Text style={{
+                    marginBottom: 1,
     color:
                     due &&
                     new Date(due).getDate() === new Date().getDate() &&
@@ -111,9 +113,7 @@ export default function Page({sort,fetchUser}) {
                       : due && new Date(due) < new Date()
                       ? "rgba(255, 41, 55, 1)"
                       : "rgba(255, 255, 255, 1)",
-    }}> {listDateHandler(due)}</Text>
-          </Text>
-          {/* </View> */}
+    }}> {listDateHandler(due)}</Text>}
           <Text style={styles.project}>{project}</Text>
         </View>
         <AddTask mode={"edit"}
@@ -319,6 +319,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: "rgb(24, 24, 24)",
   },
   title: {
@@ -337,7 +338,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 10,
+    marginRight: 6,
     // backgroundColor: "green",
   },
 
@@ -345,6 +346,7 @@ const styles = StyleSheet.create({
     // fontWeight: "bold",
     color: "white",
     fontSize: 15,
+    marginBottom: 2,
   },
   dueContainer: {
     flex: 1,
