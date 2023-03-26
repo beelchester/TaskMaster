@@ -3,6 +3,7 @@ import {
   TouchableOpacity,
   Dimensions,
     View,
+    Image
 } from "react-native";
 import { Overlay, Input } from "@rneui/themed";
 import { Icon } from "@rneui/base";
@@ -20,6 +21,9 @@ import { initialTasks } from "../features/taskSlice";
 import { fetchProject } from "../features/projectSlice";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import arrowUpIcon from "../../assets/arrow-up.png";
+import arrowDownIcon from "../../assets/arrow-down.png";
+
 const AddTask = ({showAddTask,setShowAddTask,mode,currentTask}) => {
   const projects = useSelector((state) => state.project.projects);
   const [taskName, setTaskName] = useState("");
@@ -202,7 +206,7 @@ function deleteTaskHandler() {
       borderRadius: 20,
       borderColor: "black",
       width: Dimensions.get("window").width - 40,
-      height: 400,
+      height: 375,
       backgroundColor: "rgb(24, 24, 24)",
       paddingVertical: 25,
       paddingHorizontal: 20,
@@ -234,13 +238,27 @@ function deleteTaskHandler() {
       theme="DARK"
       style={
         {
-          // width:70
+      backgroundColor: "rgb(18,18,18)",
+            borderColor : '#5F676F',
+            marginBottom: 15,
         }
       }
     containerStyle={{
-        zIndex: 100000
+        zIndex: 100000,
+        // width: 200,
     }}
+      dropDownContainerStyle={{
+      backgroundColor: "rgb(18,18,18)",
+      }}
     />
+      <View
+style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+}}
+      >
+    <View>
     <DropDownPicker
       open={priorityOpen}
       value={priorityValue}
@@ -251,15 +269,66 @@ function deleteTaskHandler() {
       theme="DARK"
       style={
         {
-          // width:70
+      backgroundColor: "rgb(18,18,18)",
+            borderColor : '#5F676F',
+            marginBottom: 15,
+              width: 100,
         }
       }
+containerStyle={{
+    zIndex: 100000,
+}}
+      dropDownContainerStyle={{
+      backgroundColor: "rgb(18,18,18)",
+              width: 100,
+      }}
     />
-<TouchableOpacity onPress={() => setShowCalendar(true)} activeOpacity={0.6} >
-<Text style={{color:'white'}}>
+    </View>
+<TouchableOpacity
+style={{
+    backgroundColor: "rgb(18,18,18)",
+    height: 50,
+        marginBottom: 15,
+        marginLeft: 10,
+    borderRadius: 8,
+    flexDirection: "row",
+        paddingHorizontal: 10,
+        paddingVertical: 3,
+    justifyContent: "space-between",
+    alignItems: "center",
+        borderColor : '#5F676F',
+        borderWidth: 1,
+        width : Dimensions.get("window").width - 200,
+
+}}
+onPress={() => {setShowCalendar(true)
+setProjectOpen(false)
+setPriorityOpen(false)
+}} activeOpacity={0.6} >
+<Text style={{color:'#AFB5C2'}}>
       {dueDate?.toLocaleDateString() || "No Due"}
 </Text>
+
+    {dueDate&&<TouchableOpacity
+    style={{
+        width: 30,
+        height: 40,
+        borderRadius: 10,
+        justifyContent: "center",
+        alignItems: "flex-end",
+    }}
+        onPress={() => setDueDate(null)}  activeOpacity={0.6} >
+    <Icon name="close" size={20} color="#AFB5C2" />
+    </TouchableOpacity>
+    }
+{
+    !dueDate&&showCalendar&&<Image source ={arrowUpIcon} style={{width:20, height:20}} />
+}
+{
+        !dueDate&&!showCalendar&&<Image source ={arrowDownIcon} style={{width:20, height:20}} />
+}
 </TouchableOpacity>
+      </View>
   {
     showCalendar && (
         <DateTimePickerModal 
@@ -272,21 +341,21 @@ function deleteTaskHandler() {
   }
          <View style={{
           flexDirection:'row',
-            alignItems:'center',
-              justifyContent:'space-between',
+              justifyContent: !priorityOpen ? 'space-between' : 'flex-end',
       }}>
-<TouchableOpacity onPress={submitTask}  style={{backgroundColor:"#33c6dd", width:80,
-height:40, borderRadius:5, justifyContent:'center', alignItems:'center', marginTop:20
+{!priorityOpen && <TouchableOpacity onPress={submitTask}  style={{backgroundColor:"#33c6dd", width:80,
+height:40, borderRadius:5, justifyContent:'center', alignItems:'center', marginTop:20, zIndex:0
+
 }}  activeOpacity={0.6} >
-<Text style={{color:'black',fontWeight:'bold',}}> {mode =="edit" ? "Edit" : "Add"}
+    <Text style={{color:'black',fontWeight:'bold',}}> {mode =="edit" ? "Edit" : "Add"}
 </Text>
     </TouchableOpacity>
-
+}
     {
     mode === "edit" &&
         <TouchableOpacity onPress={deleteTaskHandler} >
     <Icon name="delete" size={30} color="white" style={{
-        marginTop:13,
+        marginTop:19,
             marginRight:10
     }}/>
     </TouchableOpacity>
