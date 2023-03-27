@@ -36,7 +36,10 @@ const AddProject = ({showAddProject,setShowAddProject,currentProject,mode}) => {
             setProjectName(currentProject);
             setToEdit(currentProject);
         }
-    }, [currentProject]);
+        if (mode === "add") {
+            setProjectName("");
+        }
+    }, [currentProject, mode]);
 const [createProject] = useMutation(CREATE_PROJECT);
 const handleCreateProject = (name) => {
     createProject({

@@ -5,12 +5,12 @@ import { changePage } from '../features/pageSlice'
 import AddProject from '../modal/AddProject'
 import { useState } from 'react'
 import vertIcon from '../../assets/baseline_more_vert_white_24dp.png'
-const TabButton = ({title}) => {
+const TabButton = ({title,setShowEditProject,setCurrentProject}) => {
   const dispatch = useDispatch()
   const currentPage = useSelector((state) => state.page.currentPage)
-    const [showEditProject, setShowEditProject] = useState(false);
     function editHandler() {
         setShowEditProject(true);
+        setCurrentProject(title)
     }
 
   return (
@@ -75,7 +75,6 @@ const TabButton = ({title}) => {
           </TouchableOpacity>
         }
       </View>
-      <AddProject currentProject={title} mode={'edit'} showAddProject={showEditProject} setShowAddProject={setShowEditProject}/>
     </TouchableOpacity>
   )}
 

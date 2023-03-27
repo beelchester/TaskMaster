@@ -39,7 +39,9 @@ export default function Drawer() {
     const [showSort, setShowSort] = useState(false);
     const [showAddTask, setShowAddTask] = useState(false);
     const [showAddProject, setShowAddProject] = useState(false);
+    const [showEditProject, setShowEditProject] = useState(false);
     const [sort, setSort] = useState("1");
+    const [currentProject, setCurrentProject] = useState('');
 
     const projects = useSelector((state) => state.project.projects);
 
@@ -123,12 +125,15 @@ export default function Drawer() {
         <TabButton title="Music" /> */}
             <FlatList
                 data={projects}
-                renderItem={({ item }) => <TabButton  title={item.projectName} />}
+                renderItem={({ item }) => <TabButton setShowEditProject={setShowEditProject}  title={item.projectName} 
+        setCurrentProject={setCurrentProject}
+                    />}
                 keyExtractor={(item) => item.projectName}
                 style={{ height: 20 }}
             />
             <TouchableOpacity
-        onPress={() => setShowAddProject(true)}
+        onPress={() => {setShowAddProject(true)
+        setShowEditProject(false)}}
                 activeOpacity={0.6}
                 style={{
                     borderRadius: 8,
@@ -150,7 +155,7 @@ export default function Drawer() {
                     Add Project
                 </Text>
             </TouchableOpacity>
-<AddProject  showAddProject={showAddProject} setShowAddProject={setShowAddProject} />
+<AddProject  showAddProject={showEditProject?showEditProject:showAddProject} setShowAddProject={showEditProject?setShowEditProject:setShowAddProject} mode={showEditProject?'edit':'add'} currentProject={currentProject} />
             <Divider
                 color="rgba(100, 100, 100, 1)"
                 style={{ width: 170, marginTop: 10 }}
