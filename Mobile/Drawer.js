@@ -168,12 +168,28 @@ export default function Drawer() {
                     right: 0,
                     paddingTop: 20,
                     paddingBottom: 20,
-                    borderRadius: 20,
+                    borderRadius: showMenu ? 20 : 0,
                     transform: [{ scale: scaleValue }, { translateX: offsetValue }],
                 }}
             >
                 <Page sort={sort} fetchUser={fetchUser} />
-                <View style={styles.bottomContainer}>
+                <View 
+style={{
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        backgroundColor: "rgb(16, 16, 16)",
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
+        height: 55,
+        left: 0,
+        paddingHorizontal: 30,
+        paddingBottom: 5,
+        borderRadius: showMenu ? 20 : 0,
+}}
+        >
                     <TouchableOpacity
                         onPress={() => {
                             Animated.timing(scaleValue, {
@@ -340,24 +356,6 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         paddingTop: 55,
         paddingLeft: 20,
-    },
-    bottomContainer: {
-        flex: 1,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        backgroundColor: "rgb(16, 16, 16)",
-        position: "absolute",
-        bottom: 0,
-        width: "100%",
-        // height: 65,
-        height: 55,
-        left: 0,
-        // borderTopStartRadius: 20,
-        // borderTopEndRadius: 20,
-        borderRadius: 20,
-        paddingHorizontal: 30,
-        paddingBottom: 5,
     },
     plus: {
         backgroundColor: "#33c6dd",
