@@ -16,9 +16,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.TaskMaster"
+      "bundleIdentifier": "com.taskmaster.app"
     },
     "android": {
+      "package": "com.taskmaster.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -26,6 +27,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b9bcf2af-b690-40a0-a41a-bf09641cc7f0"
+      }
     }
   }
 }

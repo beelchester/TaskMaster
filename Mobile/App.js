@@ -5,6 +5,7 @@ import Drawer from './Drawer';
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client"
 import { store } from "./src/app/store";
 import { Provider, useDispatch, useSelector } from "react-redux";
+import Login from './src/screens/Login';
 export default function App() {
   const client = new ApolloClient({
     uri: APOLLO_URI,
@@ -14,7 +15,7 @@ export default function App() {
       
     <ApolloProvider client={client}>
     <Provider store={store}>
-    <Drawer />
+    <Login />
     </Provider>
     </ApolloProvider>
     
