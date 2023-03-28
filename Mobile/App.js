@@ -6,16 +6,20 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client"
 import { store } from "./src/app/store";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import Login from './src/screens/Login';
+import Main from './Main';
+
 export default function App() {
   const client = new ApolloClient({
     uri: APOLLO_URI,
     cache: new InMemoryCache(),
   });
+
+
   return (
       
     <ApolloProvider client={client}>
     <Provider store={store}>
-    <Login />
+      <Main />
     </Provider>
     </ApolloProvider>
     

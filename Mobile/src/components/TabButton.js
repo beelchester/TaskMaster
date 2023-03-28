@@ -5,6 +5,8 @@ import { changePage } from '../features/pageSlice'
 import AddProject from '../modal/AddProject'
 import { useState } from 'react'
 import vertIcon from '../../assets/baseline_more_vert_white_24dp.png'
+import {setLogin} from '../features/userSlice'
+
 const TabButton = ({title,setShowEditProject,setCurrentProject}) => {
   const dispatch = useDispatch()
   const currentPage = useSelector((state) => state.page.currentPage)
@@ -19,6 +21,7 @@ const TabButton = ({title,setShowEditProject,setCurrentProject}) => {
       activeOpacity={0.6}
       onPress={() => {
         if (title == "Log Out") {
+            dispatch(setLogin(false))
           return 0
         } else {
           dispatch(changePage(title))

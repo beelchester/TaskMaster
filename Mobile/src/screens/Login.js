@@ -1,7 +1,14 @@
 import { Image,View,Text, TouchableOpacity} from 'react-native'
 import google from "../../assets/google_logo.png"
+import {useDispatch} from 'react-redux'
+import {setLogin} from '../features/userSlice'
 
 const Login = () => {
+
+    const dispatch = useDispatch();
+
+
+
   return (
 <View style={{
          flex: 1,
@@ -60,6 +67,9 @@ const Login = () => {
             
     }}
     activeOpacity={0.6}
+    onPress={() => {
+    dispatch(setLogin(true));
+    }}
     >
     <Image source={google} style={{
         width: 30,
