@@ -10,9 +10,19 @@ import {
 import { ListItem, CheckBox, Icon } from "@rneui/base";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchProject } from "../features/projectSlice";
+import {initialTasks} from '../features/taskSlice'
 import AddTask from "../modal/AddTask";
+import {useMutation,useQuery} from '@apollo/client'
+import {UPDATE_TASK} from '../graphql/TaskMutations'
+import {GET_USER} from '../graphql/Query'
+import {
+  fetchUserFailure,
+  fetchUserStart,
+  fetchUserSuccess,
+} from "../features/fetchUserSlice";
+
 export default function Page({sort,fetchUser}) {
-  const toggleCheckbox = () => setChecked(!checked);
   const page = useSelector((state) => state.page.currentPage);
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.tasks.tasks);
@@ -56,24 +66,71 @@ export default function Page({sort,fetchUser}) {
     setShowText(showCompleted ? "Show Completed" : "Show Uncompleted");
   }
 
+
   const Item = ({ id, title, priority, due, project, completed }) => {
-    const [check, setCheck] = useState(completed);
       const task = {
           id,
         text: title,
         priority,
         project,
         due ,
-        checked: check,
-        completed ,
+        checked : !completed ,
+        completed: !completed ,
       }
       const [showEditTask, setShowEditTask] = useState(false);
 
+      const [check, setCheck] = useState(completed);
+      function toggleCheckbox() {
+        setCheck(!check);
+          handleUpdateTask();
+        // setTimeout(() => { }, 300);
+      }
+
+            const [updateTask] = useMutation(UPDATE_TASK)
+  const handleUpdateTask = () => {
+      updateTask({
+          variables: {
+          email: "sahilyeole93@gmail.com",
+          projectName: task.project,
+          taskId: task.id,
+          updatedTask: task,
+        },
+        refetchQueries: [
+          { query: GET_USER, variables: { email: "sahilyeole93@gmail.com" } },
+        ],
+      })
+    };
+
+  const user = useQuery(GET_USER, {
+    variables: { email: "sahilyeole93@gmail.com" },
+  });
+
+  const dispatch = useDispatch();
+    const fetchUser = () => {
+        if (user.loading) {
+            dispatch(fetchUserStart());
+        }
+        if (user.error) {
+            dispatch(fetchUserFailure(user.error));
+            return user.error;
+        }
+        if (user.data) {
+            dispatch(fetchUserSuccess(user.data.getUser.user));
+            // console.log(user.data.getUser.user)
+            dispatch(fetchProject(user.data.getUser.user.projects));
+            dispatch(initialTasks(user.data.getTasks));
+            // console.log(user.data)
+            console.log(user.data.getTasks)
+            //   console.log(user.data.getUser.accessToken)
+            // localStorage.setItem("accessToken", user.data.getUser.accessToken);
+            // localStorage.setItem("refreshToken", user.data.getUser.refreshToken);
+        }
+    };
     return (
       <TouchableOpacity onPress={()=>setShowEditTask(true)} style={styles.item}>
         <View style={styles.checkboxContainer} onTouchEnd={toggleCheckbox}>
           <CheckBox
-            checked={check}
+            checked={check} 
             iconType="material-community"
             checkedIcon="checkbox-marked"
             uncheckedIcon="checkbox-blank-outline"
