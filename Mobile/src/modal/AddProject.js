@@ -125,9 +125,11 @@ function deleteProjectHandler() {
     fetchUser();
   }
 
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
   
   return (
     
+       !deleteConfirm ? (
     <Overlay
 
     isVisible={showAddProject}
@@ -170,7 +172,7 @@ height:40, borderRadius:5, justifyContent:'center', alignItems:'center', marginT
 
     {
     mode === "edit" &&
-        <TouchableOpacity onPress={deleteProjectHandler} >
+        <TouchableOpacity onPress={()=>setDeleteConfirm(true)} >
     <Icon name="delete" size={30} color="white" style={{
         marginTop:13,
             marginRight:10
@@ -179,6 +181,41 @@ height:40, borderRadius:5, justifyContent:'center', alignItems:'center', marginT
     }
 </View>
   </Overlay>
+      ) 
+  : (
+    <Overlay
+
+    isVisible={showAddProject}
+    onBackdropPress={() => closeHandler()}
+    overlayStyle={{
+      // padding: 0,
+      borderWidth: 1,
+      borderRadius: 20,
+      borderColor: "black",
+    width: Dimensions.get("window").width - 40,
+      height: 195,
+      backgroundColor: "rgb(24, 24, 24)",
+      paddingVertical: 25,
+      paddingHorizontal: 20,
+    }}
+  >
+    <Text style={{ color: "white", fontWeight: "bold", fontSize: 20, marginBottom: 20, }}>Are you sure you want to delete this project? </Text>
+      <View style={{
+          flexDirection:'row',
+            alignItems:'center',
+              justifyContent:'space-between',
+              width: 170,
+              marginTop: 5,
+      }}>
+      <TouchableOpacity onPress={deleteProjectHandler}  style={{backgroundColor:"rgba(255, 41, 55, 0.8)", width:80, height:40, borderRadius:5, justifyContent:'center', alignItems:'center', marginTop:15}}  activeOpacity={0.6} >
+<Text style={{color:'white',fontWeight:'bold',}}> Delete </Text>
+    </TouchableOpacity>
+      <TouchableOpacity onPress={()=>setDeleteConfirm(false)}  style={{ width:80, height:40, borderRadius:5, justifyContent:'center', alignItems:'center', marginTop:15, }}  activeOpacity={0.6} >
+<Text style={{color:'white',fontWeight:'bold',}}> Cancel </Text>
+    </TouchableOpacity>
+</View>
+      </Overlay>
+  )      
   )
 }
 
