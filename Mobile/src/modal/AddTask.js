@@ -84,9 +84,11 @@ setShowCalendar(false)
  setCalendarText(`Due`);
 };
 
+const currentUser = useSelector((state) => state.user.user);
+console.log(currentUser.email)
   const dispatch = useDispatch();
   const user = useQuery(GET_USER, {
-    variables: { email: "sahilyeole93@gmail.com" },
+    variables: { email: currentUser.email },
   });
   useEffect(() => {
     fetchUser();
@@ -117,12 +119,12 @@ setShowCalendar(false)
   const handleCreateTask = (task) => {
       createTask({
         variables: {
-          email: "sahilyeole93@gmail.com",
+          email: currentUser.email,
           projectName: task.project,
           task,
         },
         refetchQueries: [
-          { query: GET_USER, variables: { email: "sahilyeole93@gmail.com" } },
+          { query: GET_USER, variables: { email: currentUser.email } },
         ],
       }).then(() => {
         fetchUser();
@@ -133,13 +135,13 @@ setShowCalendar(false)
   const handleUpdateTask = (task) => {
       updateTask({
           variables: {
-          email: "sahilyeole93@gmail.com",
+          email: currentUser.email,
           projectName: task.project,
           taskId: task.id,
           updatedTask: task,
         },
         refetchQueries: [
-          { query: GET_USER, variables: { email: "sahilyeole93@gmail.com" } },
+          { query: GET_USER, variables: { email: currentUser.email } },
         ],
       }).then(() => {
         fetchUser();
@@ -149,12 +151,12 @@ setShowCalendar(false)
   const handleDeleteTask = (task) => {
     deleteTask({
       variables: {
-        email: "sahilyeole93@gmail.com",
+        email: currentUser.email,
         projectName: task.project,
         taskId: task.id,
       },
       refetchQueries: [
-        { query: GET_USER, variables: { email: "sahilyeole93@gmail.com" } },
+        { query: GET_USER, variables: { email: currentUser.email } },
       ],
     }).then(() => {
       

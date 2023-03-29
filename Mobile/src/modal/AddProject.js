@@ -40,17 +40,18 @@ const AddProject = ({showAddProject,setShowAddProject,currentProject,mode}) => {
             setProjectName("");
         }
     }, [currentProject, mode]);
+    const currentUser = useSelector((state) => state.user.user);
 const [createProject] = useMutation(CREATE_PROJECT);
 const handleCreateProject = (name) => {
     createProject({
       variables: {
         projectName: name,
-          email: "sahilyeole93@gmail.com"
+          email: currentUser.email
       },
         refetchQueries: [
             {query: GET_USER, 
             variables: {
-                email: "sahilyeole93@gmail.com"
+                email: currentUser.email
             }
             }
         ]
@@ -61,16 +62,16 @@ const handleCreateProject = (name) => {
     updateProject({
       variables: {
         projectName: name,
-        email: "sahilyeole93@gmail.com",
+        email: currentUser.email,
         newProjectName: newName
       },
       refetchQueries: [
-        { query: GET_USER, variables: { email: "sahilyeole93@gmail.com" } },
+        { query: GET_USER, variables: { email: currentUser.email } },
       ],
     })
   };
     const user = useQuery(GET_USER, {
-        variables: { email: "sahilyeole93@gmail.com" },
+        variables: { email: currentUser.email },
     });
     const dispatch = useDispatch();
     const fetchUser = () => {
@@ -97,10 +98,10 @@ const handleCreateProject = (name) => {
             deleteProject({
       variables: {
         projectName: name,
-        email: "sahilyeole93@gmail.com" 
+        email: currentUser.email 
       },
       refetchQueries: [
-        { query: GET_USER, variables: { email: "sahilyeole93@gmail.com" } },
+        { query: GET_USER, variables: { email: currentUser.email } },
       ],
     })
 

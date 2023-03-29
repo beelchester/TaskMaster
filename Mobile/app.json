@@ -1,5 +1,6 @@
 {
   "expo": {
+      "scheme": "TaskMaster",
     "name": "TaskMaster",
     "slug": "TaskMaster",
     "version": "1.0.0",

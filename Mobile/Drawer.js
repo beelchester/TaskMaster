@@ -44,15 +44,17 @@ export default function Drawer() {
     const [currentProject, setCurrentProject] = useState('');
 
     const projects = useSelector((state) => state.project.projects);
-
+    const currentUser = useSelector((state) => state.user.user);
+    const login = useSelector((state) => state.user.login);
 
     const dispatch = useDispatch();
     const user = useQuery(GET_USER, {
-        variables: { email: "sahilyeole93@gmail.com" },
+        variables: { email: currentUser.email },
     });
     useEffect(() => {
         fetchUser();
-    }, [user,projects]);
+    }, [login,user,projects]);
+
 
     const fetchUser = () => {
         if (user.loading) {
@@ -87,7 +89,7 @@ export default function Drawer() {
         <View style={styles.container}>
             <Image
                 style={{ width: 58, height: 58, borderRadius: 20 }}
-                source={require("./assets/unnamed.jpg")}
+                source={{ uri: currentUser.picture }}
             />
             <Text
                 style={{
@@ -98,7 +100,7 @@ export default function Drawer() {
                     marginBottom: 13,
                 }}
             >
-                Sahil Yeole
+        {currentUser.name}
             </Text>
             <TabButton title="Today" />
             <TabButton title="Upcoming" />

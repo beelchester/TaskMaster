@@ -2,10 +2,48 @@ import { Image,View,Text, TouchableOpacity} from 'react-native'
 import google from "../../assets/google_logo.png"
 import {useDispatch} from 'react-redux'
 import {setLogin} from '../features/userSlice'
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
+import { useState, useEffect } from 'react';
+import {ANDROID_CLIENT_ID, IOS_CLIENT_ID, WEB_CLIENT_ID} from '@env'
+import { setUser } from '../features/userSlice';
+
+WebBrowser.maybeCompleteAuthSession();
 
 const Login = () => {
 
     const dispatch = useDispatch();
+
+    const [accessToken, setAccessToken] = useState(null);
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        clientId: WEB_CLIENT_ID,
+        iosClientId: IOS_CLIENT_ID,
+        androidClientId: ANDROID_CLIENT_ID,
+    });
+
+    useEffect(() => {
+        if (response?.type === 'success') {
+            setAccessToken(response.authentication.accessToken);
+            if (accessToken) {
+                fetchUserInfo();
+            }
+        }},[response,accessToken]);
+
+    async function fetchUserInfo(){
+        console.log("called")
+        let response = await fetch('https://www.googleapis.com/userinfo/v2/me', {
+            headers: { Authorization: `Bearer ${accessToken}` },
+    });
+        const userInfo = await response.json();
+        const {email, name, picture} = userInfo;
+        const currentUser = {
+            name: name,
+            email: email,
+            picture: picture,
+        }
+        dispatch(setUser(currentUser));
+        dispatch(setLogin(true));
+    }
 
 
 
@@ -26,7 +64,6 @@ const Login = () => {
         justifyContent: "flex-start",
         alignItems: "center",
         borderRadius: 20,
-
         shadowColor: "#000",
         shadowOpacity: 0.1,
         shadowRadius: 10,
@@ -68,8 +105,9 @@ const Login = () => {
     }}
     activeOpacity={0.6}
     onPress={() => {
-    dispatch(setLogin(true));
+        promptAsync();
     }}
+    disabled={!request}
     >
     <Image source={google} style={{
         width: 30,

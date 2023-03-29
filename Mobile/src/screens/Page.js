@@ -24,6 +24,7 @@ import {
 
 export default function Page({sort,fetchUser}) {
   const page = useSelector((state) => state.page.currentPage);
+    const currentUser = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.tasks.tasks);
   const [data, setData] = useState([]);
@@ -90,19 +91,19 @@ export default function Page({sort,fetchUser}) {
   const handleUpdateTask = () => {
       updateTask({
           variables: {
-          email: "sahilyeole93@gmail.com",
+          email: currentUser.email,
           projectName: task.project,
           taskId: task.id,
           updatedTask: task,
         },
         refetchQueries: [
-          { query: GET_USER, variables: { email: "sahilyeole93@gmail.com" } },
+          { query: GET_USER, variables: { email: currentUser.email } },
         ],
       })
     };
 
   const user = useQuery(GET_USER, {
-    variables: { email: "sahilyeole93@gmail.com" },
+    variables: { email: currentUser.email },
   });
 
   const dispatch = useDispatch();
