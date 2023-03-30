@@ -1,13 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-// import { isAuthenticated } from '../auth';
+import { isAuthenticated } from '../auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 
 const initialState= {
-  login: false,
-  user:  {
+  login: false, 
+  user:
+    {
     name: '',
     email: '',
-    picture: ''
-  } 
+    picture: '',
+  },
 };
 
 export const userSlice = createSlice({

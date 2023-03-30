@@ -7,6 +7,7 @@ import * as Google from 'expo-auth-session/providers/google';
 import { useState, useEffect } from 'react';
 import {ANDROID_CLIENT_ID, IOS_CLIENT_ID, WEB_CLIENT_ID} from '@env'
 import { setUser } from '../features/userSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -29,6 +30,15 @@ const Login = () => {
             }
         }},[response,accessToken]);
 
+    const setUserStorage = async (user) => {
+        try {
+            await AsyncStorage.setItem('@user', JSON.stringify(user));
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+
     async function fetchUserInfo(){
         console.log("called")
         let response = await fetch('https://www.googleapis.com/userinfo/v2/me', {
@@ -43,6 +53,7 @@ const Login = () => {
         }
         dispatch(setUser(currentUser));
         dispatch(setLogin(true));
+        setUserStorage(currentUser);
     }
 
 

@@ -29,7 +29,7 @@ const AddTask = ({showAddTask,setShowAddTask,mode,currentTask}) => {
   const [taskName, setTaskName] = useState("");
   const [priority, setPriority] = useState("P1");
 const [project, setProject] = useState("Inbox");
-const [dueDate, setDueDate] = useState(null);
+const [dueDate, setDueDate] = useState(new Date());
 const [id, setId] = useState("");
  const task = {
  id,
@@ -278,7 +278,7 @@ style={{
         }
       }
 containerStyle={{
-    zIndex: 100000,
+    // zIndex: 100000,
 }}
       dropDownContainerStyle={{
       backgroundColor: "rgb(18,18,18)",

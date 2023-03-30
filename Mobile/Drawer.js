@@ -30,6 +30,8 @@ import { CheckBox } from "@rneui/base";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import AddProject from "./src/modal/AddProject";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function Drawer() {
     const page = useSelector((state) => state.page.currentPage);
     const offsetValue = useRef(new Animated.Value(0)).current;
@@ -55,6 +57,31 @@ export default function Drawer() {
         fetchUser();
     }, [login,user,projects]);
 
+    const setAccessToken = async (value) => {
+  try {
+    await AsyncStorage.setItem('@accessToken', value)
+  } catch (e) {
+      console.log(e)
+  }
+}
+const getAllValues = async () => {
+    try {
+        const keys = await AsyncStorage.getAllKeys()
+        const values = await AsyncStorage.multiGet(keys)
+        console.log(values)
+    } catch(e) {
+        console.log(e)
+    }
+}
+getAllValues()
+
+    const setRefreshToken = async (value) => {
+    try {
+        await AsyncStorage.setItem('@refreshToken', value)
+    } catch (e) {
+        console.log(e)
+    }
+    }
 
     const fetchUser = () => {
         if (user.loading) {
@@ -70,9 +97,9 @@ export default function Drawer() {
             dispatch(fetchProject(user.data.getUser.user.projects));
             dispatch(initialTasks(user.data.getTasks));
             // console.log(user.data.getTasks)
-            //   console.log(user.data.getUser.accessToken)
-            // localStorage.setItem("accessToken", user.data.getUser.accessToken);
-            // localStorage.setItem("refreshToken", user.data.getUser.refreshToken);
+
+            setAccessToken(user.data.getUser.accessToken)
+            setRefreshToken(user.data.getUser.refreshToken)
         }
     };
 

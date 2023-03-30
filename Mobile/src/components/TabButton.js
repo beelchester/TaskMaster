@@ -5,7 +5,8 @@ import { changePage } from '../features/pageSlice'
 import AddProject from '../modal/AddProject'
 import { useState } from 'react'
 import vertIcon from '../../assets/baseline_more_vert_white_24dp.png'
-import {setLogin} from '../features/userSlice'
+import {setLogin, setUser} from '../features/userSlice'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TabButton = ({title,setShowEditProject,setCurrentProject}) => {
   const dispatch = useDispatch()
@@ -15,13 +16,30 @@ const TabButton = ({title,setShowEditProject,setCurrentProject}) => {
         setCurrentProject(title)
     }
 
+    const clearStorage = async () => {
+        try {
+            await AsyncStorage.clear();
+        } catch (e) {
+        }
+    };
+
+
   return (
 
     <TouchableOpacity
       activeOpacity={0.6}
+      style={{
+          marginBottom: title == "Log Out" ? '16%' : 0,
+      }}
       onPress={() => {
         if (title == "Log Out") {
             dispatch(setLogin(false))
+            clearStorage();
+            dispatch(setUser({
+                name: '',
+                email: '',
+                picture: '',
+            }))
           return 0
         } else {
           dispatch(changePage(title))
@@ -39,7 +57,6 @@ const TabButton = ({title,setShowEditProject,setCurrentProject}) => {
           borderRadius: 8,
           marginTop: 15,
           width: 170,
-          marginBottom: title == "Log Out" ? '16%' : 0,
           position: 'relative', 
         }}
       >
