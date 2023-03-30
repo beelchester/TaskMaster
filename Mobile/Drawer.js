@@ -31,6 +31,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import AddProject from "./src/modal/AddProject";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loading from "./src/modal/Loading";
 
 export default function Drawer() {
     const page = useSelector((state) => state.page.currentPage);
@@ -82,6 +83,8 @@ getAllValues()
         console.log(e)
     }
     }
+
+
 
     const fetchUser = () => {
         if (user.loading) {
@@ -378,6 +381,7 @@ style={{
             />
 
             <StatusBar style="auto" />
+    <Loading />
         </View>
     );
 }

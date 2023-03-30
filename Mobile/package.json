@@ -31,6 +31,7 @@
     "react-native": "0.70.5",
     "react-native-dotenv": "^3.4.8",
     "react-native-dropdown-picker": "^5.4.6",
+    "react-native-loading-spinner-overlay": "^3.0.1",
     "react-native-modal-datetime-picker": "^14.0.1",
     "react-redux": "^8.0.5"
   },
