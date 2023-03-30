@@ -7,7 +7,7 @@ exports.Query = {
 },
 getUser: async (parent, { email }, { User,RefreshToken, res }) => {
   const user= await User.findOne({ email})
-  const accessToken = jwt.sign({userId:user.id}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' })
+  const accessToken = jwt.sign({userId:user.id}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15d' })
   const oldRefreshToken = await RefreshToken.findOne({userId:user.id})
   if(oldRefreshToken){
     await oldRefreshToken.delete()
