@@ -7,8 +7,10 @@ import { useState } from 'react'
 import vertIcon from '../../assets/baseline_more_vert_white_24dp.png'
 import {setLogin, setUser} from '../features/userSlice'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SignOut from '../modal/SignOut'
 
 const TabButton = ({title,setShowEditProject,setCurrentProject}) => {
+    const [showSignOut, setShowSignOut] = useState(false)
   const dispatch = useDispatch()
   const currentPage = useSelector((state) => state.page.currentPage)
     function editHandler() {
@@ -23,6 +25,16 @@ const TabButton = ({title,setShowEditProject,setCurrentProject}) => {
         }
     };
 
+    function logoutHandler() {
+            dispatch(setLogin(false))
+            clearStorage();
+            dispatch(setUser({
+                name: '',
+                email: '',
+                picture: '',
+            }))
+    }
+
 
   return (
 
@@ -33,13 +45,7 @@ const TabButton = ({title,setShowEditProject,setCurrentProject}) => {
       }}
       onPress={() => {
         if (title == "Log Out") {
-            dispatch(setLogin(false))
-            clearStorage();
-            dispatch(setUser({
-                name: '',
-                email: '',
-                picture: '',
-            }))
+            setShowSignOut(true)
           return 0
         } else {
           dispatch(changePage(title))
@@ -95,6 +101,7 @@ const TabButton = ({title,setShowEditProject,setCurrentProject}) => {
           </TouchableOpacity>
         }
       </View>
+    <SignOut logoutHandler={logoutHandler} showSignOut={showSignOut} setShowSignOut={setShowSignOut} />
     </TouchableOpacity>
   )}
 
