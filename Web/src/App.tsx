@@ -19,6 +19,7 @@ import { GET_USER } from "./graphql/Query";
 import Login from "./components/Login";
 import { getRefreshToken, isAuthenticated, refreshToken} from "./auth";
 import { setLogin } from "./features/userSlice";
+import Loading from "./modal/Loading";
 
 function App() {
   const dispatch = useDispatch();
@@ -82,6 +83,7 @@ function App() {
         <Login />
       ) : (
         <Box sx={{ display: "flex" }}>
+        <Loading />
           <LeftDrawer />
           <Page />
         </Box>

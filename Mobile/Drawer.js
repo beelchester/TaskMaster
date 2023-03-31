@@ -85,7 +85,6 @@ getAllValues()
     }
 
 
-
     const fetchUser = () => {
         if (user.loading) {
             dispatch(fetchUserStart());
