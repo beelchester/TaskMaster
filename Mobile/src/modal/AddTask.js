@@ -26,10 +26,11 @@ import arrowDownIcon from "../../assets/arrow-down.png";
 
 const AddTask = ({showAddTask,setShowAddTask,mode,currentTask}) => {
   const projects = useSelector((state) => state.project.projects);
+    const page = useSelector((state) => state.page.currentPage);
   const [taskName, setTaskName] = useState("");
   const [priority, setPriority] = useState("P1");
 const [project, setProject] = useState("Inbox");
-const [dueDate, setDueDate] = useState(new Date());
+const [dueDate, setDueDate] = useState(null);
 const [id, setId] = useState("");
  const task = {
  id,
@@ -40,6 +41,13 @@ const [id, setId] = useState("");
  checked: false,
  completed: false,
 };
+useEffect(() => {
+    if (mode=='add'&&page!=='Today'&&page!=='Upcoming'){
+        setProject(page)
+        setProjectValue(page)
+        setPriority('P1')
+        setPriorityValue('P1')
+    }},[page,showAddTask,mode])
  useEffect(() => {
     if (mode === "edit") {
       setTaskName(currentTask.text);
@@ -51,7 +59,7 @@ const [id, setId] = useState("");
   }, [currentTask]);
 // pickers
 const [priorityOpen, setPriorityOpen] = useState(false);
-const [priorityValue, setPriorityValue] = useState("P1");
+const [priorityValue, setPriorityValue] = useState(mode === "edit" ? currentTask.priority : "P1");
 const [priorityItems, setPriorityItems] = useState([
  { label: "P1", value: "P1" },
  { label: "P2", value: "P2" },
@@ -177,8 +185,10 @@ console.log(currentUser.email)
       setShowAddTask(false);
       setTaskName("");
       setPriority("P1");
+          setPriorityValue("P1");
       setProject("Inbox");
-      setDueDate(new Date());
+        setProjectValue("Inbox");
+      setDueDate(null);
     }
   
     function closeHandler() {
@@ -188,15 +198,18 @@ console.log(currentUser.email)
       setTaskName("");
       setPriority("P1");
       setProject("Inbox");
-      setDueDate(new Date());
+        setProjectValue("Inbox");
+      setDueDate(null);
     }
 function deleteTaskHandler() {
     handleDeleteTask(currentTask);
     setShowAddTask(false);
     setTaskName("");
     setPriority("P1");
+          setPriorityValue("P1");
     setProject("Inbox");
-    setDueDate(new Date());
+        setProjectValue("Inbox");
+    setDueDate(null);
   }
   return (
     <Overlay
@@ -235,7 +248,7 @@ function deleteTaskHandler() {
       value={projectValue}
       items={projectItems}
         setOpen={()=>{setProjectOpen(!projectOpen); setPriorityOpen(false)}}
-      setValue={setProjectValue}
+      setValue={value => {setProjectValue(value); setProject(value)}}
       setItems={setProjectItems}
       theme="DARK"
       style={
@@ -266,7 +279,7 @@ style={{
       value={priorityValue}
       items={priorityItems}
       setOpen={()=>{setPriorityOpen(!priorityOpen); setProjectOpen(false)}}
-      setValue={setPriorityValue}
+      setValue={value => {setPriorityValue(value); setPriority(value)}}
       setItems={setPriorityItems}
       theme="DARK"
       style={

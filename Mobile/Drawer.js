@@ -56,7 +56,7 @@ export default function Drawer() {
     });
     useEffect(() => {
         fetchUser();
-    }, [login,user,projects]);
+    }, [login,user,projects,showAddTask,showAddProject]);
 
     const setAccessToken = async (value) => {
   try {

@@ -1,6 +1,6 @@
 {
   "expo": {
-      "scheme": "TaskMaster",
+    "scheme": "taskmaster",
     "name": "TaskMaster",
     "slug": "TaskMaster",
     "version": "1.0.0",
@@ -8,9 +8,9 @@
     "icon": "./assets/T.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/T.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1C1C1C"
     },
     "assetBundlePatterns": [
       "**/*"

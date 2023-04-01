@@ -7,8 +7,19 @@ import { store } from "./src/app/store";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import Login from './src/screens/Login';
 import Main from './Main';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+
+SplashScreen.preventAutoHideAsync();
+
 
 export default function App() {
+    useEffect(() => {
+        setTimeout(() => {
+            SplashScreen.hideAsync();
+        }, 1000);
+    }, []);
+
   const client = new ApolloClient({
     uri: APOLLO_URI,
     cache: new InMemoryCache(),

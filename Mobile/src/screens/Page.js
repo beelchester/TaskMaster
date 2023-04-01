@@ -323,6 +323,14 @@ export default function Page({sort,fetchUser}) {
           </View>
         </TouchableOpacity>
       </View>
+      {data.length === 0 && (
+          <View style={{flex:1,justifyContent:'flex-end',alignItems:'center',marginBottom:20}}>
+          <Text style={{
+                color: "grey",
+                fontSize: 23,
+          }}>No Tasks</Text>
+          </View>
+      )}
       <FlatList
         data={data}
         renderItem={({ item, index }) => (
@@ -368,6 +376,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   list: {
+      marginTop: 10,
     paddingHorizontal: 10,
     // marginBottom: 20,
   },
