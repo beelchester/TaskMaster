@@ -373,6 +373,11 @@ const projectNames = projectList.map((project:any) => project.projectName);
                       marginTop: "0.8rem",
                       marginBottom: "0.2rem",
                     }}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            submitTask();
+                        }
+                    }}
                   />
                   <Box
                     sx={{

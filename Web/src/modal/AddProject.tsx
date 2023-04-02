@@ -206,6 +206,11 @@ return (
                         "& fieldset": { borderColor: "white" },
                       },
                     }}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            mode === "edit" ? editProject() : submitProject()
+                        }
+                    }}
                   />
                   
                 <Box
