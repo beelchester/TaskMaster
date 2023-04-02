@@ -10,8 +10,6 @@ import {
   fetchUserStart,
   fetchUserSuccess,
 } from "../features/fetchUserSlice";
-import AddTask from "../modal/AddTask";
-import { theme } from "../theme";
 
 interface Todo {
   _typename?: string;
@@ -109,23 +107,6 @@ const TaskCard: React.FC<props> = ({
       dispatch(initialTasks(user.data.getTasks));
     }
   };
-  const CREATE_TASK = gql`
-    mutation Mutation(
-      $email: String!
-      $projectName: String!
-      $task: TaskInput!
-    ) {
-      createTask(email: $email, projectName: $projectName, task: $task) {
-        id
-        text
-        completed
-        due
-        priority
-        project
-        checked
-      }
-    }
-  `;
 
   const UPDATE_TASK = gql`
     mutation Mutation(
@@ -154,7 +135,6 @@ const TaskCard: React.FC<props> = ({
   const [updateTask] = useMutation(UPDATE_TASK);
 
   const handleUpdateTask = (task: any) => {
-    console.log(task);
 
     updateTask({
       variables: {
@@ -179,6 +159,17 @@ const TaskCard: React.FC<props> = ({
     }, 400);
   }
 
+        const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowWidth(window.innerWidth);
+        }
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+
   return (
     <div onClick={() => taskClickHandler(todo)} style={{ cursor: "pointer" }}>
       <Paper
@@ -186,8 +177,9 @@ const TaskCard: React.FC<props> = ({
         onMouseEnter={() => setElevation(6)}
         onMouseLeave={() => setElevation(3)}
         sx={{
-          margin: "1rem",
-          padding: "1rem",
+          margin: windowWidth < 900 ? "0rem" : "1rem", 
+            marginBottom: '1rem',
+          padding: windowWidth < 900 ? "0rem" : "1rem", 
           color: "primary.main",
           marginTop: index === 0 ? "8rem" : "0",
         }}
@@ -198,7 +190,7 @@ const TaskCard: React.FC<props> = ({
             display: "flex",
             gap: "10px",
             textAlign: "center",
-            fontWeight: "bold",
+            fontWeight: windowWidth < 900 ? "normal" : "bold",
           }}
         >
           <div
@@ -236,6 +228,7 @@ const TaskCard: React.FC<props> = ({
                       : todo.due && new Date(todo.due) < new Date()
                       ? "rgba(255, 41, 55, 1)"
                       : "rgba(255, 255, 255, 1)",
+                      fontSize: windowWidth < 900 ? "0.9rem" : "1rem",
                 }}
               />
             </Box>
@@ -245,7 +238,7 @@ const TaskCard: React.FC<props> = ({
               primary={todo.priority}
               disableTypography
               sx={{
-                fontWeight: "bold",
+                fontWeight: windowWidth < 900 ? "normal" : "bold",
                 fontSize: "1.04rem",
                 color:
                   todo.priority === "P1"
@@ -263,7 +256,9 @@ const TaskCard: React.FC<props> = ({
               <ListItemText
                 primary={todo.project}
                 disableTypography
-                sx={{ fontWeight: "bold" }}
+                sx={{ 
+                fontWeight: windowWidth < 900 ? "normal" : "bold",
+                    }}
               />
             </Box>
           )}

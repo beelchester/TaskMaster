@@ -1,40 +1,13 @@
 import CssBaseline from "@mui/material/CssBaseline";
-import { Button, Drawer, IconButton, SwipeableDrawer, ThemeProvider } from "@mui/material";
+import { Drawer, IconButton, SwipeableDrawer, ThemeProvider } from "@mui/material";
 import { theme } from "../theme";
-import { useDispatch} from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import DrawerContent from "./DrawerContent";
 import {Menu} from "@mui/icons-material"
 
 const drawerWidth = 240;
 
 export default function LeftDrawer() {
-  const dispatch = useDispatch();
-  const [addModalVisible, setAddModalVisible] = useState(false);
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const[signOutModalVisible,setSignOutModalVisible] = useState(false)
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [hoveredIndex1, setHoveredIndex1] = useState(null);
-  const [hoveredIndex2, setHoveredIndex2] = useState(null);
-
-  const [editProjectMenu, setEditProjectMenu] = useState(null);
-
-
-
-  const refOne = useRef<HTMLLIElement>(null);
-
-  useEffect(() => {
-    function handleClickOutside(event : any) {
-      if (refOne.current && !refOne.current.contains(event.target)) {
-        setEditProjectMenu(null);
-        setHoveredIndex2(null);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [refOne]);
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -46,10 +19,10 @@ export default function LeftDrawer() {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    console.log(windowWidth)
         
 const [drawerOpen, setDrawerOpen] = useState(false);
 
+const [zIndex, setZIndex] = useState(0);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -76,10 +49,7 @@ const [drawerOpen, setDrawerOpen] = useState(false);
             bgcolor: "background.paper",
             color: "primary.main",
 
-            zIndex:
-              addModalVisible || editModalVisible || deleteModalVisible || signOutModalVisible
-                ? 20
-                : 0,
+            zIndex: zIndex,
           },
         }}
         anchor="left"
@@ -87,7 +57,8 @@ const [drawerOpen, setDrawerOpen] = useState(false);
         onClose={()=>setDrawerOpen(false)}
         onOpen={()=>setDrawerOpen(true)}
       >
-      <DrawerContent/>
+      <DrawerContent  setZIndex={setZIndex}
+      />
       </SwipeableDrawer> </>):(
    <Drawer
         sx={{
@@ -100,16 +71,13 @@ const [drawerOpen, setDrawerOpen] = useState(false);
             bgcolor: "background.paper",
             color: "primary.main",
 
-            zIndex:
-              addModalVisible || editModalVisible || deleteModalVisible || signOutModalVisible
-                ? 20
-                : 0,
+            zIndex: zIndex,
           },
         }}
         variant="permanent"
         anchor="left"
       > 
-      <DrawerContent/>
+      <DrawerContent setZIndex={setZIndex}/>
         </Drawer>
       ) }
     </ThemeProvider>

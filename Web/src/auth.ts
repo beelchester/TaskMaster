@@ -18,9 +18,7 @@ export function isAuthenticated(){
   }
   try{
     const {exp} = (jwt_decode(accessToken) as any);
-    console.log(exp, Date.now()/1000)
     if(exp<Date.now()/1000){
-      console.log("dded")
       // localStorage.removeItem('accessToken');
       // localStorage.removeItem('refreshToken');
       // localStorage.removeItem('user');
@@ -36,7 +34,6 @@ export function isAuthenticated(){
 
 export async function refreshToken(email: string, token: string){
   try{
-    console.log("token")
     const REFRESH = gql`
     query Query($email: String!, $refreshToken: String) {
       refresh(email: $email, refreshToken: $refreshToken) {
@@ -52,6 +49,5 @@ export async function refreshToken(email: string, token: string){
     return accessToken;
   }
   catch(e){
-    console.log(e)
   }
 }

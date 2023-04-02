@@ -1,14 +1,8 @@
 import {
   Box,
-  Checkbox,
-  ListItem,
-  ListItemText,
   ThemeProvider,
-  Toolbar,
   Typography,
   Button,
-  FormControl,
-  InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -17,10 +11,11 @@ import {
 import { useEffect, useState } from "react";
 import { theme } from "../theme";
 import TaskCard from "../common/TaskCard";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
-import { Add, ArrowDropDown } from "@mui/icons-material";
+import { Add} from "@mui/icons-material";
 import AddTask from "../modal/AddTask";
+import taskIcon from "../assets/baseline_task_white_24dp.png"
 interface Todo {
   id: string;
   text: string;
@@ -32,6 +27,17 @@ interface Todo {
 }
 
 export default function Page() {
+
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowWidth(window.innerWidth);
+        }
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
   const [isModalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -70,7 +76,6 @@ export default function Page() {
   function handleSortChange(event: SelectChangeEvent) {
     setSort(event.target.value);
   }
-  console.log(sort)
   useEffect(() => {
     if (sort == "3" && page !== "Today"&& page !== "Upcoming") {
     setSort("1");
@@ -82,9 +87,6 @@ export default function Page() {
 
 
   const [editModalVisible, setEditModalVisible] = useState(false);
-  function editClickHandler() {
-    setEditModalVisible(true);
-  }
 const toggleEditModal = () => {
   setEditModalVisible(!editModalVisible);
 };
@@ -136,21 +138,40 @@ useEffect(() => {
             }}
           >
             <Typography
-              variant="h3"
+              variant= {windowWidth<900?"h5":"h3"}
               component="h3"
               sx={{ marginTop: "4rem", marginBottom: "0.5rem" }}
             >
               {page}
             </Typography>
           </motion.div>
-          <Box sx={{ marginTop: "4rem",marginRight:'1.5rem', display:'flex',  justifyContent:'flex-end', alignItems:'center'}}>
+          <Box sx={{ marginTop: "4rem",
+          marginRight: windowWidth<900?0:"1.5rem",
+          display:'flex',  justifyContent:'flex-end', alignItems:'center',
+          width : windowWidth<900?270:'auto', 
+          }}>
+
+            {windowWidth<900&&<Button onClick={() => handleClickCompleted()} sx={{
+                marginX:windowWidth<900?'0.5rem':'1.5rem',
+            border: showCompleted ? "1px solid #fff" : "none",
+            }}>
+                {
+                        <img src={taskIcon}
+                        style={{
+                            width: "1.5rem",
+                            height: "1.5rem",
+                            opacity: showCompleted ? "1" : "0.5",
+                        }}
+                        />
+                    }
+              </Button>}
             <Box>
-            <Button onClick={() => handleClickCompleted()} sx={{marginX:'1.5rem',
+            {windowWidth>900&&<Button onClick={() => handleClickCompleted()} sx={{marginX:'1.5rem',
             border: showCompleted ? "1px solid #fff" : "none",
             }}>
                 {" "}
                 {showText}{" "}
-              </Button>
+              </Button>}
               <Select
                 onChange={handleSortChange}
                 value={sort}
@@ -158,8 +179,8 @@ useEffect(() => {
                   color: "white",
                   bgcolor: "rgba(255, 255, 255, 0.05)",
                   height: "3rem",
-                  width: "9rem",
-                  marginRight: "4rem",
+                  width: windowWidth<900?"8rem":"9rem", 
+                  marginRight: windowWidth<900?"1rem":"4rem",
                   ".MuiSvgIcon-root ": {
                     fill: "white !important",
                   },
@@ -173,7 +194,7 @@ useEffect(() => {
             </Box>
             <Box>
               <IconButton
-                size="large"
+                size= {windowWidth<900?"small":"large"}
                 sx={{
                   bgcolor: "secondary.main",
                   ":hover": { bgcolor: "secondary.dark" },
@@ -195,7 +216,7 @@ useEffect(() => {
                         fontSize: "1.5rem",
                         position: "absolute",
                         top: "50%",
-                        left: "50%",
+                        left: windowWidth<900?"40%":"50%", 
                         color: "grey",
                     }}> 
                 No Tasks
@@ -210,7 +231,7 @@ useEffect(() => {
                         fontSize: "1.5rem",
                         position: "fixed",
                         top: "50%",
-                        left: "50%",
+                        left: windowWidth<900?"40%":"50%", 
                         color: "grey",
                     }}> 
                 No Tasks
@@ -225,7 +246,7 @@ useEffect(() => {
                         fontSize: "1.5rem",
                         position: "fixed",
                         top: "50%",
-                        left: "50%",
+                        left: windowWidth<900?"40%":"50%", 
                         color: "grey",
                     }}> 
                 No Tasks

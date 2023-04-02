@@ -6,32 +6,34 @@ import Page from "./components/Page";
 import Box from "@mui/material/Box";
 
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchUserStart,
-  fetchUserFailure,
-  fetchUserSuccess,
-} from "./features/fetchUserSlice";
-import { useQuery, gql, useMutation } from "@apollo/client";
-import { fetchProject } from "./features/projectSlice";
-import { initialTasks } from "./features/taskSlice";
-import { Button } from "@mui/material";
-import { GET_USER } from "./graphql/Query";
 import Login from "./components/Login";
-import { getRefreshToken, isAuthenticated, refreshToken} from "./auth";
-import { setLogin } from "./features/userSlice";
+import {isAuthenticated} from "./auth";
+import {setLogin} from "./features/userSlice";
 import Loading from "./modal/Loading";
 
 function App() {
-  const dispatch = useDispatch();
-  const currentUser = useSelector((state: any) => state.user.user);
-  const projectsList = useSelector((state: any) => state.projects.projects);
+    const [isMobile, setIsMobile] = useState(false);
 
-  const tasks = useSelector((state: any) => state.tasks.tasks);
+  useEffect(() => {
+    const userAgent = navigator.userAgent;
+    setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent));
+  }, []);
+
+    useEffect(() => {
+        if (isMobile) {
+            alert("Please use TaskMaster mobile app for better experience");
+        }
+    }, [isMobile]);
+
+
+  const dispatch = useDispatch();
 
   const login = useSelector((state: any) => state.user.login);
 
   const page = useSelector((state: any) => state.page.currentPage);
+
   isAuthenticated()
+
   useEffect(() => {
   if(!isAuthenticated()){
     dispatch(setLogin(false));
@@ -52,8 +54,7 @@ function App() {
   //   }
   //   `;
 
-  async function refreshTokenIfExpired(){
-    console.log("hm")
+  // async function refreshTokenIfExpired(){
     // if(!getRefreshToken()){
     //   dispatch(setLogin(false));
     //   return
@@ -75,7 +76,8 @@ function App() {
     //     dispatch(setLogin(false));
     //   }
     // }
-  }
+  // }
+
 
   return (
     <>

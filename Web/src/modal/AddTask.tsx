@@ -15,11 +15,7 @@ import {Calendar} from 'react-date-range';
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef} from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  initialTasks,
-} from "../features/taskSlice";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { fetchProject } from "../features/projectSlice";
 import {
   fetchUserStart,
   fetchUserFailure,
@@ -29,7 +25,6 @@ import {CREATE_TASK,UPDATE_TASK,DELETE_TASK} from '../graphql/TaskMutations';
 import { GET_USER } from "../graphql/Query";
 import "./calendar.css"
 import { Close } from "@mui/icons-material";
-import Page from "../components/Page";
 import { changePage } from "../features/pageSlice";
 interface props {
   isVisible: boolean;
@@ -148,7 +143,6 @@ const projectNames = projectList.map((project:any) => project.projectName);
       // dispatch(fetchUserSuccess(user.data.user.getUser));
       // dispatch(fetchProject(user.data.user.getUser.projects));
       // dispatch(initialTasks(user.data.getTasks));
-      console.log(user)
     }
   };
 
@@ -264,6 +258,17 @@ const projectNames = projectList.map((project:any) => project.projectName);
     return "No Due Date"
   }
 
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowWidth(window.innerWidth);
+        }
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -313,8 +318,8 @@ const projectNames = projectList.map((project:any) => project.projectName);
                   border: "1px solid",
                   borderColor: "rgba(255, 255, 255, 0.1)",
                   borderRadius: "10px",
-                  width: "50rem",
-                  height: "30.3rem",
+                  width: windowWidth <800?"100%": "50rem", 
+                  height:  "30.3rem",
                 }}
               >
                <motion.div
@@ -381,7 +386,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
                   />
                   <Box
                     sx={{
-                      width: "30%",
+                      width: windowWidth <650? "100%": "30%", 
                       display: "flex",
                       justifyContent: "space-between",
                         marginBottom: "1.3rem",
@@ -461,7 +466,8 @@ const projectNames = projectList.map((project:any) => project.projectName);
                   <TextField ref={refTwo} value={dateFieldHandler()} 
                   label="Due Date"
                   InputLabelProps={{
-                    style: { color: "white", outlineColor: "white" },
+                    style: { color: "white", outlineColor: "white",
+                    },
                   }}
                   inputProps={{ style: { color: "white", outlineColor:"white",
                 padding:"10px 14px",
@@ -492,7 +498,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
                       },
                       // height: "45px",
                       marginBottom:"0.9rem",
-                      width: "30%",
+                      width: windowWidth <800? "100%": "30%", 
                       
                 }}>
                  

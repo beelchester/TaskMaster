@@ -20,6 +20,17 @@ const AddProject: React.FC<props> = ({
   toEditProject,
 }) => {
 
+        const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowWidth(window.innerWidth);
+        }
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+
   const dispatch = useDispatch();
   const [animateDelete, setAnimateDelete] = useState(0);
   const [projectName, setProjectName] = useState("");
@@ -138,7 +149,7 @@ return (
                   border: "1px solid",
                   borderColor: "rgba(255, 255, 255, 0.1)",
                   borderRadius: "10px",
-                  width: "50rem",
+                  width: windowWidth < 800 ? "100%" : "50rem",
                   height: "22rem",
                 }}
               >

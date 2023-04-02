@@ -1,6 +1,3 @@
-import React from 'react'
-import Drawer from "@mui/material/Drawer";
-import CssBaseline from "@mui/material/CssBaseline";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
@@ -10,14 +7,12 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { Box, Button, IconButton, SwipeableDrawer, ThemeProvider } from "@mui/material";
+import { Box, Button, IconButton} from "@mui/material";
 import { MoreVert, Logout } from "@mui/icons-material";
-import { theme } from "../theme";
 import { changePage } from "../features/pageSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import AddProject from "../modal/AddProject";
-import { current } from "@reduxjs/toolkit";
 import { useQuery } from "@apollo/client";
 import { fetchUserFailure, fetchUserStart, fetchUserSuccess } from "../features/fetchUserSlice";
 import { fetchProject } from "../features/projectSlice";
@@ -25,7 +20,14 @@ import { initialTasks } from "../features/taskSlice";
 import { GET_USER } from '../graphql/Query';
 import Signout from "../modal/Signout";
 
-const DrawerContent = () => {
+interface DrawerContentProps {
+    setZIndex: (zIndex: number) => void;
+}
+
+const DrawerContent:React.FC<DrawerContentProps> = ({setZIndex}) => {
+
+
+
 const currentUser = useSelector((state: any) => state.user.user);
   const user = useQuery(GET_USER, {
     variables: { email: currentUser.email },
@@ -47,7 +49,6 @@ const currentUser = useSelector((state: any) => state.user.user);
       dispatch(fetchUserSuccess(user.data.getUser.user));
       dispatch(fetchProject(user.data.getUser.user.projects));
       dispatch(initialTasks(user.data.getTasks));
-      console.log(user.data.getUser.accessToken)
     localStorage.setItem("accessToken", user.data.getUser.accessToken);
     localStorage.setItem("refreshToken", user.data.getUser.refreshToken);
     }
@@ -92,6 +93,16 @@ const currentUser = useSelector((state: any) => state.user.user);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [refOne]);
+    
+    useEffect(() => {
+       if (addModalVisible || editModalVisible || deleteModalVisible || signOutModalVisible ) {
+            setZIndex(20)
+           }
+           else{
+                setZIndex(0)
+               }
+    }, [addModalVisible, editModalVisible, deleteModalVisible, signOutModalVisible])
+
   return (
         <Box sx={{ height:'100vh',display:"flex",flexDirection:'column',justifyContent:'space-between'}}>
         <Box>

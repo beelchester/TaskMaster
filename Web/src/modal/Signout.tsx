@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from '@mui/material'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState ,useEffect} from 'react'
 import { useDispatch } from 'react-redux'
 import { setLogin, setUser } from '../features/userSlice'
 
@@ -13,6 +13,16 @@ const Signout:React.FC<props> = ({
 isVisible,
 closeModal
 }) => {
+        const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowWidth(window.innerWidth);
+        }
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
   const dispatch = useDispatch();
   const [animateDelete, setAnimateDelete] = useState(0);
   function closeModalHandler() {
@@ -71,7 +81,7 @@ closeModal
                   border: "1px solid",
                   borderColor: "rgba(255, 255, 255, 0.1)",
                   borderRadius: "10px",
-                  width: "50rem",
+                  width: windowWidth < 800 ? "100%" : "50rem",
                   height: "17rem",
                 }}
               >
