@@ -94,6 +94,10 @@ const taskClickHandler = (todo: Todo) => {
   setEditModalVisible(true);
   // setModalVisible(true);
 };
+useEffect(() => {
+    setShowCompleted(false);
+    setShowText("Show Completed");
+},[page])
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -127,6 +131,7 @@ const taskClickHandler = (todo: Todo) => {
             transition={{
               duration: 0.3,
               delay: 0.0,
+          position: "relative",
               // ease: [0, 0.71, 0.2, 1.01],
             }}
           >
@@ -140,7 +145,9 @@ const taskClickHandler = (todo: Todo) => {
           </motion.div>
           <Box sx={{ marginTop: "4rem",marginRight:'1.5rem', display:'flex',  justifyContent:'flex-end', alignItems:'center'}}>
             <Box>
-            <Button onClick={() => handleClickCompleted()} sx={{marginX:'1.5rem'}}>
+            <Button onClick={() => handleClickCompleted()} sx={{marginX:'1.5rem',
+            border: showCompleted ? "1px solid #fff" : "none",
+            }}>
                 {" "}
                 {showText}{" "}
               </Button>
@@ -181,6 +188,51 @@ const taskClickHandler = (todo: Todo) => {
           </Box>
         </Box>
         
+        {
+            todos.filter(todo=> todo.project === page && todo.completed === showCompleted).length === 0 && page!=="Today" && page!=="Upcoming" &&
+            (
+                 <Typography variant="h5" component="h5" sx={{
+                        fontSize: "1.5rem",
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        color: "grey",
+                    }}> 
+                No Tasks
+                </Typography>
+            )
+            }
+
+        {
+            todos.filter(todo=> todo.completed === showCompleted && todo.due&& new Date(todo.due).getDate() === (new Date() as any).getDate()).length === 0 && page==="Today" && 
+            (
+                 <Typography variant="h5" component="h5" sx={{
+                        fontSize: "1.5rem",
+                        position: "fixed",
+                        top: "50%",
+                        left: "50%",
+                        color: "grey",
+                    }}> 
+                No Tasks
+                </Typography>
+            )
+            }
+
+        {
+            todos.filter(todo=> todo.completed === showCompleted).length === 0 && page==="Upcoming" && 
+            (
+                 <Typography variant="h5" component="h5" sx={{
+                        fontSize: "1.5rem",
+                        position: "fixed",
+                        top: "50%",
+                        left: "50%",
+                        color: "grey",
+                    }}> 
+                No Tasks
+                </Typography>
+            )
+            }
+
         {todos !== undefined && page === "Today"
           ? todos
               .filter(

@@ -222,7 +222,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
     setTaskName("");
     setPriority("P1");
     setProject("Inbox");
-    setDueDate(new Date());
+    setDueDate(null);
   }
 
   function closeHandler() {
@@ -230,7 +230,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
     setTaskName("");
     setPriority("P1");
     setProject("Inbox");
-    setDueDate(new Date());
+    setDueDate(null);
   }
 
   function handlebgclick(){
@@ -314,7 +314,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
                   borderColor: "rgba(255, 255, 255, 0.1)",
                   borderRadius: "10px",
                   width: "50rem",
-                  height: "30rem",
+                  height: "30.3rem",
                 }}
               >
                <motion.div
@@ -370,8 +370,8 @@ const projectNames = projectList.map((project:any) => project.projectName);
                       "& .MuiOutlinedInput-root:hover": {
                         "& fieldset": { borderColor: "white" },
                       },
-                      marginTop: "0.8rem",
-                      marginBottom: "0.2rem",
+                      marginTop: "1rem",
+                      marginBottom: "1.3rem",
                     }}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
@@ -384,7 +384,8 @@ const projectNames = projectList.map((project:any) => project.projectName);
                       width: "30%",
                       display: "flex",
                       justifyContent: "space-between",
-                      marginTop:"0.5rem"
+                        marginBottom: "1.3rem",
+
                     }}
                   >
                     <FormControl>
@@ -490,8 +491,7 @@ const projectNames = projectList.map((project:any) => project.projectName);
                         "& fieldset": { borderColor: "white" },
                       },
                       // height: "45px",
-                      marginTop:"0.87rem",
-                      // marginBottom:"0.9rem",
+                      marginBottom:"0.9rem",
                       width: "30%",
                       
                 }}>

@@ -74,8 +74,8 @@ export default function Page({sort,fetchUser}) {
         text: title,
         priority,
         project,
-        due ,
-        checked : !completed ,
+        due,
+        checked,
         completed: !completed ,
       }
       const [showEditTask, setShowEditTask] = useState(false);
