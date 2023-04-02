@@ -274,8 +274,8 @@ return (
                   border: "1px solid",
                   borderColor: "rgba(255, 255, 255, 0.1)",
                   borderRadius: "10px",
-                  width: "50rem",
-                  height: "20rem",
+                  width: windowWidth < 800 ? "100%" : "50rem",
+                  height: windowWidth < 800 ? "25rem" : "20rem",
                 }}
               >
                <motion.div

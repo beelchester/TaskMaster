@@ -78,6 +78,7 @@ function App() {
     // }
   // }
 
+const [iconZIndex, setIconZIndex] = useState<number>(0);
 
   return (
     <>
@@ -86,8 +87,8 @@ function App() {
       ) : (
         <Box sx={{ display: "flex" }}>
         <Loading />
-          <LeftDrawer />
-          <Page />
+          <LeftDrawer iconZIndex={iconZIndex}/>
+          <Page setIconZIndex={setIconZIndex} />
         </Box>
       )}
     </>

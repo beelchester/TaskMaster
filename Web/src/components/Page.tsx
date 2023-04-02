@@ -26,7 +26,11 @@ interface Todo {
   checked: boolean;
 }
 
-export default function Page() {
+interface Props {
+  setIconZIndex: (zIndex: number) => void;
+}
+
+const Page: React.FC<Props> = ({ setIconZIndex }) => {
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -100,6 +104,15 @@ useEffect(() => {
     setShowCompleted(false);
     setShowText("Show Completed");
 },[page])
+
+useEffect(() => {
+    if(isModalVisible||editModalVisible){
+        setIconZIndex(0)
+    }else{
+        setIconZIndex(20)
+    }
+},[isModalVisible, editModalVisible])
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -390,3 +403,5 @@ useEffect(() => {
     </ThemeProvider>
   );
 }
+
+export default Page

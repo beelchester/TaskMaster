@@ -7,8 +7,11 @@ import {Menu} from "@mui/icons-material"
 
 const drawerWidth = 240;
 
-export default function LeftDrawer() {
+interface Props {
+    iconZIndex: number;
+}
 
+const LeftDrawer: React.FC<Props> = ({ iconZIndex }) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     useEffect(() => {
@@ -33,7 +36,7 @@ const [zIndex, setZIndex] = useState(0);
         position: "fixed",
         top: "10px",
         left: "16px",
-        zIndex: 100,
+        zIndex: iconZIndex, 
         color: "primary.main",
        }}
        >
@@ -48,7 +51,6 @@ const [zIndex, setZIndex] = useState(0);
             boxSizing: "border-box",
             bgcolor: "background.paper",
             color: "primary.main",
-
             zIndex: zIndex,
           },
         }}
@@ -83,3 +85,5 @@ const [zIndex, setZIndex] = useState(0);
     </ThemeProvider>
   );
 }
+
+export default LeftDrawer;
