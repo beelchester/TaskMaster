@@ -150,7 +150,7 @@ return (
                   borderColor: "rgba(255, 255, 255, 0.1)",
                   borderRadius: "10px",
                   width: windowWidth < 800 ? "100%" : "50rem",
-                  height: "22rem",
+                  height: windowWidth < 800 ? "25rem" : "22rem",
                 }}
               >
                 <motion.div
@@ -335,7 +335,9 @@ return (
                   >
                     Yes
                   </Button>
-                  <Button  size="large">
+                  <Button
+                  onClick={closeModal}
+                  size="large">
                     Cancel
                   </Button>
                 </motion.div>
