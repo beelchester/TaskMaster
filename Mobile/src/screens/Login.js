@@ -30,9 +30,9 @@ const Login = () => {
 
     const [accessToken, setAccessToken] = useState(null);
     const [request, response, promptAsync] = Google.useAuthRequest({
-        clientId:  "675091325788-79tn0tlaoj9oeuoprlghf2tfvntbggju.apps.googleusercontent.com",
-        iosClientId:  "675091325788-e9h2oo5rm418php4bg9e7rjh4na50tqc.apps.googleusercontent.com",
-        androidClientId:  "675091325788-i1vppj69i39v9atrf9qhneg0elr247du.apps.googleusercontent.com",
+        clientId: WEB_CLIENT_ID,
+        iosClientId: IOS_CLIENT_ID,
+        androidClientId: ANDROID_CLIENT_ID
     });
 
     useEffect(() => {
