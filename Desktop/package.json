@@ -10,10 +10,9 @@
   },
   "dependencies": {
     "@electron/remote": "^2.0.9"
-    
   },
   "devDependencies": {
-    "electron-packager": "^17.1.1",
-    "electron": "^23.1.2"
+    "electron": "22.3.5",
+    "electron-packager": "^17.1.1"
   }
 }
