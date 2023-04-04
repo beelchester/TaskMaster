@@ -17,7 +17,7 @@ TaskMaster is available on the following platforms:
 - Database: MongoDB
 
 ### Installation
-You can download the latest version of TaskMaster from the [Releases section](https://github.com/sahilyeole/TaskMaster/releases). Simply choose the version that corresponds to your platform and follow the installation instructions.
+You can download the latest version of TaskMaster from the [Releases](https://github.com/sahilyeole/TaskMaster/releases) section. Simply choose the version that corresponds to your platform and follow the installation instructions.
 
 ### Features
 TaskMaster comes with a variety of features that make it easy to manage your tasks and projects:
@@ -39,7 +39,7 @@ If you'd like to contribute to TaskMaster, please follow these steps:
 5. Open a pull request
 
 ### Bug Reports and Feature Requests
-If you encounter any bugs or have a feature request, please open an issue in the [Issues section](https://github.com/sahilyeole/TaskMaster/issues) of this repository.
+If you encounter any bugs or have a feature request, please open an issue in the [Issues](https://github.com/sahilyeole/TaskMaster/issues) section of this repository.
 
 ### License
 TaskMaster is licensed under the [MIT License](https://github.com/sahilyeole/TaskMaster/blob/master/LICENSE).
