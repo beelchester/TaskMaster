@@ -30,6 +30,21 @@ TaskMaster comes with a variety of features that make it easy to manage your tas
 ### Live Preview
 Check out the live preview of TaskMaster here: https://taskmaster0.netlify.app/
 
+
+https://user-images.githubusercontent.com/73148455/230098640-4774b825-0a24-45a5-813e-f01692e074d0.mov
+
+
+
+https://user-images.githubusercontent.com/73148455/230098740-fec9a6de-62d1-4c10-958b-f644192cbbab.mov
+
+
+
+
+https://user-images.githubusercontent.com/73148455/230098772-a92c44ac-d4b5-4487-990a-495b4fc0644e.mov
+
+
+
+
 ### Contributing
 If you'd like to contribute to TaskMaster, please follow these steps:
 1. Fork the repository
