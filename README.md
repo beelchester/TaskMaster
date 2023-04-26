@@ -59,4 +59,4 @@ If you encounter any bugs or have a feature request, please open an issue in the
 ### License
 TaskMaster is licensed under the [MIT License](https://github.com/sahilyeole/TaskMaster/blob/master/LICENSE).
 
-We hope you find TaskMaster useful and look forward to your feedback!
+I hope you find TaskMaster useful and look forward to your feedback!
